@@ -1,0 +1,12 @@
+export("plotseries")
+
+importFrom("grDevices",
+           "grey")
+
+importFrom("graphics",
+           "abline", "axTicks", "axis", "axis.Date",
+           "lines", "par", "plot", "text")
+
+importFrom("utils", "tail")
+
+importFrom("PMwR", "returns")

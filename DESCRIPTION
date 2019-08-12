@@ -1,0 +1,13 @@
+Package: plotseries
+Type: Package
+Title: Time-Series Plots
+Version: 0.0-1
+Date: 2019-08-08
+Maintainer: Enrico Schumann <es@enricoschumann.net>
+Authors@R: person("Enrico", "Schumann",
+                  role  = c("aut", "cre"),
+                  email = "es@enricoschumann.net",
+                  comment = c(ORCID = "0000-0001-7601-6576"))
+Description: Plot the time series of a portfolio or stock.
+Imports: PMwR, grDevices, graphics, utils
+License: GPL-3
