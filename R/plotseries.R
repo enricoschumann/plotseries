@@ -16,17 +16,26 @@ function(series, col, ...,
          white.underlay = FALSE,
          lwd = 1,
          font.family = "Gentium Plus",
-         arrow = "\u2192"
+         arrow = "\u2192",
+         currency = "USD",
+         bm = NULL
          ) {
 
     .fmt_r <- function(x)
         format(round(x*100, 1), nsmall = 1)
 
+    ylab <- paste(ylab, collapse = "")
+
+    R <- returns(series, period = "ann")
+    if (!is.null(bm)) {
+        R.bm <- returns(bm, period = "ann")
+        R <- R - R.bm
+        series <- scale1(series/bm)
+    }
+
     if (is.null(ylim))
         ylim <- range(series, na.rm = TRUE)
 
-    ylab <- paste(ylab, collapse = "")
-    R <- returns(series, period = "ann")
     par(las = 1,
         bty = "n",
         mar = mar,
@@ -56,12 +65,13 @@ function(series, col, ...,
     abline(h = x2, lwd = 0.25, col = grey(0.8))
 
     x1 <- seq(as.Date("1871-1-1"),
-              as.Date("2020-1-1"), by = "5 years")
+              as.Date("2020-1-1"), by = "1 years")
     if (time.axis)
         axis.Date(1, lwd = 0, at = x1)
     abline(v = x1, lwd = 0.25, col = grey(0.8))
     if (add.yearly.grid) {
-        x1 <- seq(as.Date("1999-1-1"), as.Date("2019-1-1"), by = "1 year")
+        x1 <- seq(first_of_year(head(index(series), 1)),
+                  first_of_year(tail(index(series), 1)), by = "1 year")
         abline(v = x1, lwd = 0.25, col = grey(0.8))
     }
 
@@ -81,13 +91,17 @@ function(series, col, ...,
         if (add.returns)
             lab <- paste0(lab, ": ", .fmt_r(R), "%")
         if (add.dollars)
-            lab <- paste0(lab, "\nUSD 1 ", arrow, " ",
+            lab <- paste0(lab, "\n", currency ," 1 ", arrow, " ",
                           round(coredata(tail(series, 1))))
         if (add.last)
             lab <- paste0(lab, ": ",
                           paste0(round(coredata(tail(series, 1)), 1)))
 
-        y <- coredata(tail(series, 1))
+        y.temp <- na.locf(series)
+        y <- coredata(tail(y.temp, 1))
+        if (any(is.na(y[do.show]))) {
+            warning("NA in series: series/labels may be missing")
+        }
         par(xpd = TRUE)
         text(max(index(series)),
              y[do.show],
