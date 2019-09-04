@@ -1,25 +1,39 @@
-plotseries <-
-function(series, col, ...,
-         labels = FALSE,
-         labels.cex = 0.7,
-         add.returns = TRUE,
-         add.dollars = TRUE,
-         add.last = FALSE,
-         log.scale = FALSE,
-         ylab = "",
-         ylim = NULL,
-         main = "",
-         add1 = TRUE,
-         add.yearly.grid = FALSE,
-         time.axis = TRUE,
-         mar = c(1.25,4,1.25,4.5),
-         white.underlay = FALSE,
-         lwd = 1,
-         font.family = "Gentium Plus",
-         arrow = "\u2192",
-         currency = "USD",
-         bm = NULL
-         ) {
+plotseries <-function(series,
+                      col,
+                      ...,
+                      labels = NA,
+                      add.labels = TRUE,
+                      add.returns = TRUE,
+                      add.dollars = TRUE,
+                      add.last = FALSE,
+                      labels.cex = 0.7,
+                      log.scale = FALSE,
+                      ylab = "",
+                      ylim = NULL,
+                      main = "",
+                      main.cex = 0.7,
+                      main.col = grey(0.5),
+                      add0 = FALSE,
+                      add1 = TRUE,
+                      y.axis = TRUE,
+                      time.axis = TRUE,
+                      time.labels.at = NULL,
+                      time.grid = TRUE,
+                      time.grid.at = NULL,
+                      add.yearly.grid = FALSE,
+                      mar = c(1.25,4,1.25,4.5),
+                      white.underlay = FALSE,
+                      lwd = 1,
+                      font.family = "Gentium Plus",
+                      arrow = "\u2192",
+                      currency = "USD",
+                      percent = "%",
+                      bm = NULL,
+                      show.returns = FALSE,
+                      do.scale1 = FALSE,
+                      xpd.hlines = FALSE,
+                      xpd.vlines = FALSE
+                      ) {
 
     .fmt_r <- function(x)
         format(round(x*100, 1), nsmall = 1)
@@ -42,34 +56,64 @@ function(series, col, ...,
         tck = 0.01,
         family = font.family,
         ps = 9.5,
-        mgp = c(2, 0.25, 0))
+        mgp = c(2, 0.25, 0),
+        col.axis = grey(.5),
+        cex.axis = 1)
 
-    plot(series[, 1], plot.type = "single",
-         main = main,
+    plot(series[, 1L],
+         plot.type = "single",
+         main = "",
          xlab = "",
-         col = if (white.underlay) "white" else col[1],
+         col = if (white.underlay) "white" else col[1L],
          ylab = ylab,
          log = if (log.scale) "y" else "",
          xaxt = "n",
          yaxt = "n",
          lwd = if (white.underlay) lwd*2 else lwd,
          ylim = ylim, ...)
+    mtext(main, 3, main.cex = 0.7, col = grey(0.5))
 
+
+    x2 <- axTicks(2)
     if (add1)
-        x2 <- unique(sort(c(1, setdiff(axTicks(2), 0))))
-    else
-        x2 <- unique(sort(c(0, setdiff(axTicks(2), 0))))
+        x2 <- unique(sort(c(1, setdiff(x2, 0))))
+    else if (add0)
+        x2 <- unique(sort(c(0, setdiff(x2, 1))))
 
-    axis(2, lwd = 0, at = x2,
-         labels = format(x2, big.mark = "'"))
+    if (y.axis)
+        axis(2, lwd = 0, at = x2,
+             labels = format(x2, big.mark = "'"))
+
+    if (xpd.hlines)
+        par(xpd = TRUE)
     abline(h = x2, lwd = 0.25, col = grey(0.8))
+    if (xpd.hlines)
+        par(xpd = FALSE)
+
 
     x1 <- seq(as.Date("1871-1-1"),
               as.Date("2020-1-1"), by = "1 years")
+
     if (time.axis)
-        axis.Date(1, lwd = 0, at = x1)
-    abline(v = x1, lwd = 0.25, col = grey(0.8))
-    if (add.yearly.grid) {
+        if (is.null(time.labels.at))
+            axis.Date(1, lwd = 0, at = index(series))
+        else
+            axis.Date(1, lwd = 0, at = time.labels.at)
+
+    if (xpd.vlines)
+        par(xpd = TRUE)
+    if (time.grid) {
+        if (is.null(time.grid.at))
+            abline(v = x1, lwd = 0.25, col = grey(0.8))
+        else
+            abline(v = time.grid.at, lwd = 0.25, col = grey(0.8))
+    }
+    if (xpd.vlines)
+        par(xpd = FALSE)
+
+    if (!is.null(time.grid.at)) {
+        abline(v = time.grid.at, lwd = 0.25, col = grey(0.8))
+    } else if (add.yearly.grid) {
         x1 <- seq(first_of_year(head(index(series), 1)),
                   first_of_year(tail(index(series), 1)), by = "1 year")
         abline(v = x1, lwd = 0.25, col = grey(0.8))
@@ -84,12 +128,27 @@ function(series, col, ...,
             lines(series[, i], col = col[i], ...)
         }
 
-    if (!isFALSE(labels)) {
+    if (FALSE) {
+        lab <- paste0(.fmt_r(R))
+        y.temp <- na.locf(series)
+        y <- coredata(tail(y.temp, 1))
+        if (any(is.na(y))) {
+            warning("NA in series: series/labels may be missing")
+        }
+        par(xpd = TRUE)
+        text(max(index(series)),
+             y,
+             lab, pos = 3,
+             cex = labels.cex)
+        par(xpd = FALSE)
+
+    } else if (!isFALSE(labels)) {
         do.show <- labels != ""
         lab <- labels
 
         if (add.returns)
-            lab <- paste0(lab, ": ", .fmt_r(R), "%")
+            lab <- paste0(lab, ifelse(labels != " ", ": ", ""),
+                                      .fmt_r(R), "%")
         if (add.dollars)
             lab <- paste0(lab, "\n", currency ," 1 ", arrow, " ",
                           round(coredata(tail(series, 1))))
