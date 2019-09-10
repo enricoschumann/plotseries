@@ -71,7 +71,7 @@ plotseries <-function(series,
          yaxt = "n",
          lwd = if (white.underlay) lwd*2 else lwd,
          ylim = ylim, ...)
-    mtext(main, 3, main.cex = 0.7, col = grey(0.5))
+    mtext(main, 3, cex = 0.7, col = grey(0.5))
 
 
     x2 <- axTicks(2)
@@ -164,7 +164,7 @@ plotseries <-function(series,
         par(xpd = TRUE)
         text(max(index(series)),
              y[do.show],
-             lab[do.show], pos = 4,
+             lab[do.show], pos = 3,
              cex = labels.cex)
         par(xpd = FALSE)
     }
