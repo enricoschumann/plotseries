@@ -18,6 +18,8 @@ plotseries <-function(series,
                       y.axis = TRUE,
                       time.axis = TRUE,
                       time.labels.at = NULL,
+                      time.labels.format = NULL,
+                      time.labels = TRUE,
                       time.grid = TRUE,
                       time.grid.at = NULL,
                       add.yearly.grid = FALSE,
@@ -32,7 +34,8 @@ plotseries <-function(series,
                       show.returns = FALSE,
                       do.scale1 = FALSE,
                       xpd.hlines = FALSE,
-                      xpd.vlines = FALSE
+                      xpd.vlines = FALSE,
+                      returns.period = "ann"
                       ) {
 
     .fmt_r <- function(x)
@@ -40,9 +43,9 @@ plotseries <-function(series,
 
     ylab <- paste(ylab, collapse = "")
 
-    R <- returns(series, period = "ann")
+    R <- returns(series, period = returns.period)
     if (!is.null(bm)) {
-        R.bm <- returns(bm, period = "ann")
+        R.bm <- returns(bm, period = returns.period)
         R <- R - R.bm
         series <- scale1(series/bm)
     }
@@ -97,9 +100,15 @@ plotseries <-function(series,
     if (time.axis)
         if (is.null(time.labels.at))
             axis.Date(1, lwd = 0, at = index(series))
-        else
-            axis.Date(1, lwd = 0, at = time.labels.at)
-
+        else {
+            if (is.null(time.labels.format))
+                axis.Date(1, lwd = 0, at = time.labels.at)
+            else
+                axis.Date(1, lwd = 0,
+                          at = time.labels.at,
+                          format = time.labels.format,
+                          labels = time.labels)
+        }
     if (xpd.vlines)
         par(xpd = TRUE)
     if (time.grid) {
