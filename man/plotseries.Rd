@@ -1,96 +1,199 @@
 \name{plotseries}
 \alias{plotseries}
-\alias{plotseries-package}
 \title{
-  Plot Time-Series
+  Plot a Financial Time-Series
 }
 \description{
-  Plot time-series of portfolio
+
+  Plot a financial time-series and add annotation, such as total return.
+  
 }
 \usage{
 plotseries(series, col, ...,
-           labels = FALSE, labels.cex = 0.7,
-           add.returns = TRUE, add.dollars = TRUE,
+           labels = NA, add.labels = TRUE,
+           add.returns = TRUE,
+           add.dollars = TRUE,
            add.last = FALSE,
-           log.scale = FALSE,
-           ylab = "", ylim = NULL, main = "",
-           add1 = TRUE, add.yearly.grid = FALSE,
-           time.axis = TRUE,
+           labels.cex = 1, log.scale = FALSE,
+           ylab = "", ylim = NULL,
+           main = "", main.cex = 0.7, main.col = grey(0.5),
+           add0 = FALSE, add1 = TRUE,
+           y.axis = TRUE,
+           time.axis = TRUE, time.labels.at = NULL,
+           time.labels.format = NULL, time.labels = TRUE,
+           time.grid = TRUE, time.grid.at = NULL,
+           add.yearly.grid = FALSE,
            mar = c(1.25, 4, 1.25, 4.5),
            white.underlay = FALSE, lwd = 1,
-           font.family = "Gentium Plus")
+           font.family = "Gentium Plus", arrow = "\u2192",
+           currency = "USD", percent = "\%",
+           big.mark = "'", bm = NULL, show.returns = FALSE,
+           do.scale1 = FALSE, xpd.hlines = FALSE, xpd.vlines = FALSE,
+           returns.period = "ann")
 }
 \arguments{
   \item{series}{
     a zoo series
-}
+  }
   \item{col}{
-    x
-}
+    character: colors
+  }
   \item{\dots}{
-    x
-}
+    other parameters
+  }
   \item{labels}{
-    x
-}
-  \item{labels.cex}{
-    x
-}
+    character
+  }
+  \item{add.labels}{
+    
+    logical: a vector with as many elements as series has columms
+    
+  }
   \item{add.returns}{
-    x
+    logical
 }
   \item{add.dollars}{
-    x
+    logical
 }
   \item{add.last}{
-%%     ~~Describe \code{add.last} here~~
+    logical
+}
+  \item{labels.cex}{
+    numeric
 }
   \item{log.scale}{
-%%     ~~Describe \code{log.scale} here~~
+    logical
 }
   \item{ylab}{
-%%     ~~Describe \code{ylab} here~~
+    logical
 }
   \item{ylim}{
-%%     ~~Describe \code{ylim} here~~
+    numeric
 }
   \item{main}{
-%%     ~~Describe \code{main} here~~
+    a string
+}
+  \item{main.cex}{
+    numeric
+}
+  \item{main.col}{
+    character
+}
+  \item{add0}{
+    logical
 }
   \item{add1}{
-%%     ~~Describe \code{add1} here~~
+    logical
+}
+  \item{y.axis}{
+    logical
+  }
+  \item{time.axis}{
+    logical    
+}
+  \item{time.labels.at}{
+..    
+}
+  \item{time.labels.format}{
+    ..
+}
+  \item{time.labels}{
+    ..
+}
+  \item{time.grid}{
+    logical
+}
+  \item{time.grid.at}{
+    ..
 }
   \item{add.yearly.grid}{
-%%     ~~Describe \code{add.yearly.grid} here~~
-}
-  \item{time.axis}{
-%%     ~~Describe \code{time.axis} here~~
+    ..
 }
   \item{mar}{
-%%     ~~Describe \code{mar} here~~
+    ..    
 }
   \item{white.underlay}{
-%%     ~~Describe \code{white.underlay} here~~
-}
+    logical
+  }
   \item{lwd}{
-%%     ~~Describe \code{lwd} here~~
+    logical
 }
   \item{font.family}{
-x
+    logical
 }
+  \item{arrow}{
+    character
+}
+  \item{currency}{
+    character
+}
+  \item{percent}{
+    character
+}
+  \item{big.mark}{
+    character
+}
+  \item{bm}{
+    a zoo series
+}
+  \item{show.returns}{
+    logical
+}
+  \item{do.scale1}{
+    logical
+}
+  \item{xpd.hlines}{
+    logical
+}
+  \item{xpd.vlines}{
+    logical
+}
+  \item{returns.period}{
+
+    character: default is \code{"ann"}; but
+    \code{"itd"} (inception to date) may be useful as
+    well
+
+  }
 }
 \details{
-  To be added
+
+  The function calls \code{\link{plot}}. Its is very
+  experimental; its argument list is not stable.
+  
+  
+
+  
 }
 \value{
   Called for its side effect.
 }
+%% \references{
+%% %% ~put references to the literature/web site here ~
+%% }
 \author{
   Enrico Schumann
 }
-%% \seealso{
-%% %% ~~objects to See Also as \code{\link{help}}, ~~~
-%% }
-\examples{
-1+1
+\section{Warning}{The function is not stable yet.}
+\seealso{
+
+  \code{\link{plot}}
+  
 }
+\examples{
+\donttest{
+series <- French("~/Downloads/French/",
+                   "10_Portfolios_Prior_12_2_CSV.zip",
+                   frequency = "monthly",
+                   weighting = "value",
+                   price.series = TRUE)
+series <- zoo(series, as.Date(row.names(series)))
+
+plotseries(series,
+             col = hcl.colors(n = 30, palette = "Greens"),
+             add.dollars = FALSE,          
+             log.scale = TRUE,
+             labels = colnames(series))
+}
+}
+\keyword{hplot}

@@ -5,8 +5,14 @@ importFrom("grDevices",
 
 importFrom("graphics",
            "abline", "axTicks", "axis", "axis.Date",
-           "lines", "par", "plot", "text")
+           "lines", "par", "plot", "text", "mtext")
 
 importFrom("utils", "tail")
 
-importFrom("PMwR", "returns")
+importFrom("PMwR", "returns", "scale1")
+
+importFrom("utils", "head")
+importFrom("zoo", "index", "coredata", "na.locf")
+
+importFrom("datetimeutils", "first_of_year")
+

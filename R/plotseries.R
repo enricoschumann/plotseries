@@ -6,7 +6,7 @@ plotseries <-function(series,
                       add.returns = TRUE,
                       add.dollars = TRUE,
                       add.last = FALSE,
-                      labels.cex = 0.7,
+                      labels.cex = 1,
                       log.scale = FALSE,
                       ylab = "",
                       ylim = NULL,
@@ -30,6 +30,7 @@ plotseries <-function(series,
                       arrow = "\u2192",
                       currency = "USD",
                       percent = "%",
+                      big.mark = "'",
                       bm = NULL,
                       show.returns = FALSE,
                       do.scale1 = FALSE,
@@ -53,6 +54,15 @@ plotseries <-function(series,
     if (is.null(ylim))
         ylim <- range(series, na.rm = TRUE)
 
+    if (is.character(time.grid.at) &&
+        grep("year", time.grid.at, ignore.case = TRUE)) {
+
+        n <- as.numeric(strsplit(time.grid.at, " +")[[1]][1])
+        time.grid.at <- first_of_year(seq(index(series)[1],
+                                          tail(index(series),1),
+                                          by = paste(time.grid.at)))
+    }
+
     par(las = 1,
         bty = "n",
         mar = mar,
@@ -61,7 +71,7 @@ plotseries <-function(series,
         ps = 9.5,
         mgp = c(2, 0.25, 0),
         col.axis = grey(.5),
-        cex.axis = 1)
+        cex.axis = 2)
 
     plot(series[, 1L],
          plot.type = "single",
@@ -85,7 +95,7 @@ plotseries <-function(series,
 
     if (y.axis)
         axis(2, lwd = 0, at = x2,
-             labels = format(x2, big.mark = "'"))
+             labels = format(x2, big.mark = big.mark))
 
     if (xpd.hlines)
         par(xpd = TRUE)
@@ -99,7 +109,7 @@ plotseries <-function(series,
 
     if (time.axis)
         if (is.null(time.labels.at))
-            axis.Date(1, lwd = 0, at = index(series))
+            xx <- axis.Date(1, lwd = 0, x = index(series))
         else {
             if (is.null(time.labels.format))
                 axis.Date(1, lwd = 0, at = time.labels.at)
@@ -113,7 +123,7 @@ plotseries <-function(series,
         par(xpd = TRUE)
     if (time.grid) {
         if (is.null(time.grid.at))
-            abline(v = x1, lwd = 0.25, col = grey(0.8))
+            abline(v = xx, lwd = 0.25, col = grey(0.8))
         else
             abline(v = time.grid.at, lwd = 0.25, col = grey(0.8))
     }
@@ -147,7 +157,7 @@ plotseries <-function(series,
         par(xpd = TRUE)
         text(max(index(series)),
              y,
-             lab, pos = 3,
+             lab, pos = 4,
              cex = labels.cex)
         par(xpd = FALSE)
 
@@ -173,7 +183,7 @@ plotseries <-function(series,
         par(xpd = TRUE)
         text(max(index(series)),
              y[do.show],
-             lab[do.show], pos = 3,
+             lab[do.show], pos = 4,
              cex = labels.cex)
         par(xpd = FALSE)
     }

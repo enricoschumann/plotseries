@@ -1,0 +1,5 @@
+v0.1-0  (2019-09-19)
+
+  o initial release: the package provides a single
+    function, 'plotseries', that plots one or several
+    (financial) time-series
