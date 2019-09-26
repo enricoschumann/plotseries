@@ -71,7 +71,7 @@ plotseries <-function(series,
         ps = 9.5,
         mgp = c(2, 0.25, 0),
         col.axis = grey(.5),
-        cex.axis = 2)
+        cex.axis = 1)
 
     plot(series[, 1L],
          plot.type = "single",
