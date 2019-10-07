@@ -6,7 +6,7 @@ plotseries <-function(series,
                       add.returns = TRUE,
                       add.dollars = TRUE,
                       add.last = FALSE,
-                      labels.cex = 1,
+                      labels.cex = 0.7,
                       log.scale = FALSE,
                       ylab = "",
                       ylim = NULL,
@@ -36,7 +36,8 @@ plotseries <-function(series,
                       do.scale1 = FALSE,
                       xpd.hlines = FALSE,
                       xpd.vlines = FALSE,
-                      returns.period = "ann"
+                      returns.period = "ann",
+                      series.type = "level"
                       ) {
 
     .fmt_r <- function(x)
@@ -49,6 +50,8 @@ plotseries <-function(series,
         R.bm <- returns(bm, period = returns.period)
         R <- R - R.bm
         series <- scale1(series/bm)
+        if (show.returns)
+            series <- 100*(series - 1)
     }
 
     if (is.null(ylim))
@@ -119,6 +122,10 @@ plotseries <-function(series,
                           format = time.labels.format,
                           labels = time.labels)
         }
+    else
+        xx <- axis.Date(1, lwd = 0, x = index(series),
+                        labels = FALSE)
+
     if (xpd.vlines)
         par(xpd = TRUE)
     if (time.grid) {
