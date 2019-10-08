@@ -7,9 +7,11 @@ plotseries <-function(series,
                       add.dollars = TRUE,
                       add.last = FALSE,
                       labels.cex = 0.7,
+                      labels.col = NULL,
                       log.scale = FALSE,
                       ylab = "",
                       ylim = NULL,
+                      lwd = 1,
                       main = "",
                       main.cex = 0.7,
                       main.col = grey(0.5),
@@ -24,8 +26,8 @@ plotseries <-function(series,
                       time.grid.at = NULL,
                       add.yearly.grid = FALSE,
                       mar = c(1.25,4,1.25,4.5),
+                      cex.axis = 1,
                       white.underlay = FALSE,
-                      lwd = 1,
                       font.family = "Gentium Plus",
                       arrow = "\u2192",
                       currency = "USD",
@@ -74,7 +76,7 @@ plotseries <-function(series,
         ps = 9.5,
         mgp = c(2, 0.25, 0),
         col.axis = grey(.5),
-        cex.axis = 1)
+        cex.axis = cex.axis)
 
     plot(series[, 1L],
          plot.type = "single",
@@ -87,7 +89,7 @@ plotseries <-function(series,
          yaxt = "n",
          lwd = if (white.underlay) lwd*2 else lwd,
          ylim = ylim, ...)
-    mtext(main, 3, cex = 0.7, col = grey(0.5))
+    mtext(main, 3, cex = main.cex, col = grey(0.5))
 
 
     x2 <- axTicks(2)
@@ -107,8 +109,8 @@ plotseries <-function(series,
         par(xpd = FALSE)
 
 
-    x1 <- seq(as.Date("1871-1-1"),
-              as.Date("2020-1-1"), by = "1 years")
+    ## x1 <- seq(as.Date("1871-1-1"),
+    ##           as.Date("2020-1-1"), by = "1 years")
 
     if (time.axis)
         if (is.null(time.labels.at))
@@ -187,11 +189,14 @@ plotseries <-function(series,
         if (any(is.na(y[do.show]))) {
             warning("NA in series: series/labels may be missing")
         }
+        if (isTRUE(labels.col))
+            labels.col <- col[do.show]
         par(xpd = TRUE)
         text(max(index(series)),
              y[do.show],
              lab[do.show], pos = 4,
-             cex = labels.cex)
+             cex = labels.cex,
+             col = labels.col)
         par(xpd = FALSE)
     }
     invisible(NULL)
