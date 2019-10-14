@@ -7,6 +7,7 @@ plotseries <-function(series,
                       add.dollars = TRUE,
                       add.last = FALSE,
                       labels.cex = 0.7,
+                      labels.pos = 4,
                       labels.col = NULL,
                       log.scale = FALSE,
                       ylab = "",
@@ -166,7 +167,7 @@ plotseries <-function(series,
         par(xpd = TRUE)
         text(max(index(series)),
              y,
-             lab, pos = 4,
+             lab, pos = labels.pos,
              cex = labels.cex)
         par(xpd = FALSE)
 
@@ -194,7 +195,8 @@ plotseries <-function(series,
         par(xpd = TRUE)
         text(max(index(series)),
              y[do.show],
-             lab[do.show], pos = 4,
+             lab[do.show],
+             pos = labels.pos,
              cex = labels.cex,
              col = labels.col)
         par(xpd = FALSE)

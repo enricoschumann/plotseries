@@ -14,8 +14,9 @@ plotseries(series, col, ...,
            add.returns = TRUE,
            add.dollars = TRUE,
            add.last = FALSE,
-           labels.cex = 1, log.scale = FALSE,
-           ylab = "", ylim = NULL,
+           labels.cex = 0.7, labels.pos = 4, labels.col = NULL,
+           log.scale = FALSE,
+           ylab = "", ylim = NULL,lwd = 1,
            main = "", main.cex = 0.7, main.col = grey(0.5),
            add0 = FALSE, add1 = TRUE,
            y.axis = TRUE,
@@ -24,12 +25,14 @@ plotseries(series, col, ...,
            time.grid = TRUE, time.grid.at = NULL,
            add.yearly.grid = FALSE,
            mar = c(1.25, 4, 1.25, 4.5),
-           white.underlay = FALSE, lwd = 1,
+           cex.axis = 1,
+           white.underlay = FALSE,
            font.family = "Gentium Plus", arrow = "\u2192",
            currency = "USD", percent = "\%",
            big.mark = "'", bm = NULL, show.returns = FALSE,
            do.scale1 = FALSE, xpd.hlines = FALSE, xpd.vlines = FALSE,
-           returns.period = "ann")
+           returns.period = "ann",
+           series.type = "level")
 }
 \arguments{
   \item{series}{
@@ -60,6 +63,12 @@ plotseries(series, col, ...,
 }
   \item{labels.cex}{
     numeric
+}
+  \item{labels.pos}{
+    numeric
+}
+  \item{labels.col}{
+    \code{NULL}, \code{TRUE} or character
 }
   \item{log.scale}{
     logical
@@ -112,7 +121,10 @@ plotseries(series, col, ...,
   \item{mar}{
     ..    
 }
-  \item{white.underlay}{
+  \item{cex.axis}{
+    numeric
+}
+\item{white.underlay}{
     logical
   }
   \item{lwd}{
@@ -153,6 +165,11 @@ plotseries(series, col, ...,
     character: default is \code{"ann"}; but
     \code{"itd"} (inception to date) may be useful as
     well
+
+  }
+  \item{series.type}{
+
+    character
 
   }
 }
