@@ -2,7 +2,7 @@ Package: plotseries
 Type: Package
 Title: Time-Series Plots
 Version: 0.2-0
-Date: 2019-10-08
+Date: 2019-10-30
 Maintainer: Enrico Schumann <es@enricoschumann.net>
 Authors@R: person("Enrico", "Schumann",
                   role  = c("aut", "cre"),
@@ -12,5 +12,6 @@ Description: Plot the time-series of a portfolio value
   or stock price.  The aim is to provide high-quality,
   informative graphics.
 Imports: PMwR, grDevices, graphics, utils, zoo, datetimeutils
+Enhances: zoo
 Suggests: NMOF
 License: GPL-3

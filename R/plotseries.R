@@ -19,6 +19,7 @@ plotseries <-function(series,
                       add0 = FALSE,
                       add1 = TRUE,
                       y.axis = TRUE,
+                      y.axis.pos = "left",
                       time.axis = TRUE,
                       time.labels.at = NULL,
                       time.labels.format = NULL,
@@ -40,7 +41,8 @@ plotseries <-function(series,
                       xpd.hlines = FALSE,
                       xpd.vlines = FALSE,
                       returns.period = "ann",
-                      series.type = "level"
+                      series.type = "level",
+                      probs = NULL
                       ) {
 
     .fmt_r <- function(x)
@@ -79,19 +81,32 @@ plotseries <-function(series,
         col.axis = grey(.5),
         cex.axis = cex.axis)
 
-    plot(series[, 1L],
-         plot.type = "single",
-         main = "",
-         xlab = "",
-         col = if (white.underlay) "white" else col[1L],
-         ylab = ylab,
-         log = if (log.scale) "y" else "",
-         xaxt = "n",
-         yaxt = "n",
-         lwd = if (white.underlay) lwd*2 else lwd,
-         ylim = ylim, ...)
-    mtext(main, 3, cex = main.cex, col = grey(0.5))
+    if (series.type == "level") {
+        plot(series[, 1L],
+             plot.type = "single",
+             main = "",
+             xlab = "",
+             col = if (white.underlay) "white" else col[1L],
+             ylab = ylab,
+             log = if (log.scale) "y" else "",
+             xaxt = "n",
+             yaxt = "n",
+             lwd = if (white.underlay) lwd*2 else lwd,
+             ylim = ylim, ...)
+    } else if (series.type == "fan") {
 
+        .fan.default(series,
+                     t = index(series),
+                     n.levels = 5,
+                     probs = probs,
+                     lines = FALSE,
+                     log.scale = log.scale,
+                     initial.value = 1,
+                     add.median = TRUE)
+
+    }
+    if (main != "")
+        mtext(main, 3, cex = main.cex, col = grey(0.5))
 
     x2 <- axTicks(2)
     if (add1)
@@ -99,10 +114,14 @@ plotseries <-function(series,
     else if (add0)
         x2 <- unique(sort(c(0, setdiff(x2, 1))))
 
-    if (y.axis)
-        axis(2, lwd = 0, at = x2,
-             labels = format(x2, big.mark = big.mark))
-
+    if (y.axis) {
+        if (y.axis.pos %in% c("left", "both"))
+            axis(2, lwd = 0, at = x2,
+                 labels = format(x2, big.mark = big.mark))
+        if (y.axis.pos %in% c("right", "both"))
+            axis(4, lwd = 0, at = x2,
+                 labels = format(x2, big.mark = big.mark))
+    }
     if (xpd.hlines)
         par(xpd = TRUE)
     abline(h = x2, lwd = 0.25, col = grey(0.8))
@@ -129,16 +148,16 @@ plotseries <-function(series,
         xx <- axis.Date(1, lwd = 0, x = index(series),
                         labels = FALSE)
 
-    if (xpd.vlines)
-        par(xpd = TRUE)
     if (time.grid) {
+        if (xpd.vlines)
+            par(xpd = TRUE)
         if (is.null(time.grid.at))
             abline(v = xx, lwd = 0.25, col = grey(0.8))
         else
             abline(v = time.grid.at, lwd = 0.25, col = grey(0.8))
+        if (xpd.vlines)
+            par(xpd = FALSE)
     }
-    if (xpd.vlines)
-        par(xpd = FALSE)
 
     if (!is.null(time.grid.at)) {
         abline(v = time.grid.at, lwd = 0.25, col = grey(0.8))
@@ -148,30 +167,36 @@ plotseries <-function(series,
         abline(v = x1, lwd = 0.25, col = grey(0.8))
     }
 
-    lines(series[, 1],  col = col[1], ...)
+    if (series.type == "level") {
+        lines(series[, 1],  col = col[1], ...)
 
-    if (!is.null(dim(series)) && ncol(series) > 1)
-        for (i in 2:ncol(series)) {
-            if (white.underlay)
-                lines(series[, i], col = "white", lwd = 2*lwd, ...)
-            lines(series[, i], col = col[i], ...)
-        }
+        if (!is.null(dim(series)) && ncol(series) > 1)
+            for (i in 2:ncol(series)) {
+                if (white.underlay)
+                    lines(series[, i], col = "white", lwd = 2*lwd, ...)
+                lines(series[, i], col = col[i], ...)
+            }
+    }
 
-    if (FALSE) {
+
+    if (series.type == "level") {
         lab <- paste0(.fmt_r(R))
         y.temp <- na.locf(series)
         y <- coredata(tail(y.temp, 1))
-        if (any(is.na(y))) {
-            warning("NA in series: series/labels may be missing")
-        }
-        par(xpd = TRUE)
-        text(max(index(series)),
-             y,
-             lab, pos = labels.pos,
-             cex = labels.cex)
-        par(xpd = FALSE)
+    } else if (series.type == "fan") {
+        lab <- paste("median ", .fmt_r(median(R)))
+        y.temp <- na.locf(series)
+        y <- median(coredata(tail(y.temp, 1)))
+    }
+    if (any(is.na(y))) {
+        warning("NA in series: series/labels may be missing")
+    }
+    ## par(xpd = TRUE)
+    ##     text(max(index(series)), y,
+    ##          lab, pos = labels.pos, cex = labels.cex)
+    ## par(xpd = FALSE)
 
-    } else if (!isFALSE(labels)) {
+    if (!isFALSE(labels)) {
         do.show <- labels != ""
         lab <- labels
 
@@ -203,3 +228,73 @@ plotseries <-function(series,
     }
     invisible(NULL)
 }
+
+.fan.zoo <- function(P,
+                     n.levels = 5,
+                     probs = NULL,
+                     lines = FALSE,
+                     log.scale  = FALSE,
+                     aggregate = NULL, ...) {
+    if (!is.null(aggregate) && aggregate == "monthly")
+        P <- aggregate(P, datetimeutils::end_of_month(index(P)),
+                       tail, 1)
+    .fan.default(P, t= index(P), n.levels = n.levels, probs = probs,
+                 log.scale = log.scale, ...)
+}
+
+.fan.default <- function(P, t, n.levels = 5,
+                         probs = NULL,
+                         lines = FALSE,
+                         log.scale = FALSE,
+                         initial.value = 1,
+                         add.median = TRUE,
+                         ...) {
+
+    if (is.finite(initial.value))
+        P <- scale1(P, level = initial.value)
+    if (is.null(dim) || ncol(P) == 1L)
+        warning("a single series makes a slim fan")
+    nt <- nrow(P)
+    if (!is.null(probs)) {
+        levels <- probs
+    } else {
+        levels <- seq(0.10, 0.25, length.out = n.levels)
+    }
+    greys  <- seq(0.7,  0.50, length.out = length(levels))
+
+    args <- list(...)
+
+    if (!lines) {
+        par(las = 1,
+            bty = "n",
+            mar = c(1.25,4,1.25,4.5),
+            tck = 0.01,
+            ps = 9.5,
+            mgp = c(2, 0.25, 0),
+            col.axis = grey(.5),
+            cex.axis = 1)
+
+        plot(t, rep(100, nt),
+             ylim = range(P),
+             xlab = "",
+             ylab = "",
+             lty = 0,
+             type = "n",
+             log = if (log.scale) "y" else "",
+             xaxt = "n",
+             yaxt = "n")
+
+    }
+
+    for (level in levels) {
+
+        l <- apply(P, 1, quantile, level)
+        u <- apply(P, 1, quantile, 1 - level)
+        col <- grey(greys[level == levels])
+        polygon(c(t, rev(t)), c(l, rev(u)),
+                col = col, border = NA)
+    }
+    lines(t, apply(P, 1, median))
+    invisible(NULL)
+}
+
