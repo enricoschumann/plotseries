@@ -6,6 +6,7 @@ plotseries <-function(series,
                       add.returns = TRUE,
                       add.dollars = TRUE,
                       add.last = FALSE,
+                      lab.fun = NULL,
                       labels.cex = 0.7,
                       labels.pos = 4,
                       labels.col = NULL,
@@ -33,6 +34,7 @@ plotseries <-function(series,
                       font.family = "Gentium Plus",
                       arrow = "\u2192",
                       currency = "USD",
+                      colon = ": ",
                       percent = "%",
                       big.mark = "'",
                       bm = NULL,
@@ -170,7 +172,7 @@ plotseries <-function(series,
     if (series.type == "level") {
         lines(series[, 1],  col = col[1], ...)
 
-        if (!is.null(dim(series)) && ncol(series) > 1)
+        if (NCOL(series) > 1)
             for (i in 2:ncol(series)) {
                 if (white.underlay)
                     lines(series[, i], col = "white", lwd = 2*lwd, ...)
@@ -178,53 +180,55 @@ plotseries <-function(series,
             }
     }
 
-
-    if (series.type == "level") {
-        lab <- paste0(.fmt_r(R))
-        y.temp <- na.locf(series)
-        y <- coredata(tail(y.temp, 1))
-    } else if (series.type == "fan") {
-        lab <- paste("median ", .fmt_r(median(R)))
-        y.temp <- na.locf(series)
-        y <- median(coredata(tail(y.temp, 1)))
-    }
-    if (any(is.na(y))) {
-        warning("NA in series: series/labels may be missing")
-    }
-    ## par(xpd = TRUE)
-    ##     text(max(index(series)), y,
-    ##          lab, pos = labels.pos, cex = labels.cex)
-    ## par(xpd = FALSE)
-
     if (!isFALSE(labels)) {
-        do.show <- labels != ""
+        if (length(labels) == 1L && (is.na(labels) || labels = ""))
+            labels <- rep(labels, NCOL(series))
+        do.show <- !is.na(labels)
         lab <- labels
+        lab[is.na(lab)] <- ""
 
         if (add.returns)
-            lab <- paste0(lab, ifelse(labels != " ", ": ", ""),
-                                      .fmt_r(R), "%")
+            lab <- paste0(lab, ifelse(do.show, colon, ""),
+                          .fmt_r(R), "%")
+        if (add.last)
+            lab <- paste0(lab, colon,
+                          paste0(round(coredata(tail(series, 1)), 1)))
+        if (!is.null(lab.fun)) {
+            if (NCOL(series) == 1)
+                lab <- paste0(lab, colon, lab.fun(series))
+            else
+                for (i in 1:NCOL(series))
+                    lab[i] <- paste0(lab[i], colon, lab.fun(series[, i]))
+        }
         if (add.dollars)
             lab <- paste0(lab, "\n", currency ," 1 ", arrow, " ",
                           round(coredata(tail(series, 1))))
-        if (add.last)
-            lab <- paste0(lab, ": ",
-                          paste0(round(coredata(tail(series, 1)), 1)))
 
-        y.temp <- na.locf(series)
-        y <- coredata(tail(y.temp, 1))
+
+        if (series.type == "level") {
+            y.temp <- na.locf(series)
+            y <- coredata(tail(y.temp, 1))
+        } else if (series.type == "fan") {
+            lab <- paste("median ", .fmt_r(median(R)))  ## FIXME
+            y.temp <- na.locf(series)
+            y <- median(coredata(tail(y.temp, 1)))
+        }
+
         if (any(is.na(y[do.show]))) {
             warning("NA in series: series/labels may be missing")
         }
         if (isTRUE(labels.col))
             labels.col <- col[do.show]
-        par(xpd = TRUE)
-        text(max(index(series)),
-             y[do.show],
-             lab[do.show],
-             pos = labels.pos,
-             cex = labels.cex,
-             col = labels.col)
-        par(xpd = FALSE)
+        if (any(do.show)) {
+            par(xpd = TRUE)
+            text(max(index(series)),
+                 y[do.show],
+                 lab[do.show],
+                 pos = labels.pos,
+                 cex = labels.cex,
+                 col = labels.col)
+            par(xpd = FALSE)
+        }
     }
     invisible(NULL)
 }
