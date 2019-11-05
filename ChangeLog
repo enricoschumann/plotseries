@@ -1,11 +1,14 @@
+2019-11-05  Enrico Schumann  <es@enricoschumann.net>
+
+	* R/plotseries.R (plotseries): add argument 'grid.col'
+
 2019-10-30  Enrico Schumann  <es@enricoschumann.net>
 
 	* R/plotseries.R (plotseries): add fan plot code
 
 2019-10-14  Enrico Schumann  <es@enricoschumann.net>
 
-	* R/plotseries.R (plotseries): add argument
-	'labels.pos'
+	* R/plotseries.R (plotseries): add argument 'labels.pos'
 
 2019-10-08  Enrico Schumann  <es@enricoschumann.net>
 

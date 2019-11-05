@@ -42,6 +42,7 @@ plotseries <-function(series,
                       do.scale1 = FALSE,
                       xpd.hlines = FALSE,
                       xpd.vlines = FALSE,
+                      grid.col = grey(0.8),
                       returns.period = "ann",
                       series.type = "level",
                       probs = NULL
@@ -126,7 +127,7 @@ plotseries <-function(series,
     }
     if (xpd.hlines)
         par(xpd = TRUE)
-    abline(h = x2, lwd = 0.25, col = grey(0.8))
+    abline(h = x2, lwd = 0.25, col = grid.col)
     if (xpd.hlines)
         par(xpd = FALSE)
 
@@ -154,9 +155,9 @@ plotseries <-function(series,
         if (xpd.vlines)
             par(xpd = TRUE)
         if (is.null(time.grid.at))
-            abline(v = xx, lwd = 0.25, col = grey(0.8))
+            abline(v = xx, lwd = 0.25, col = grid.col)
         else
-            abline(v = time.grid.at, lwd = 0.25, col = grey(0.8))
+            abline(v = time.grid.at, lwd = 0.25, col = grid.col)
         if (xpd.vlines)
             par(xpd = FALSE)
     }
@@ -181,7 +182,7 @@ plotseries <-function(series,
     }
 
     if (!isFALSE(labels)) {
-        if (length(labels) == 1L && (is.na(labels) || labels = ""))
+        if (length(labels) == 1L && (is.na(labels) || labels == ""))
             labels <- rep(labels, NCOL(series))
         do.show <- !is.na(labels)
         lab <- labels
