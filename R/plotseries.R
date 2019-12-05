@@ -4,12 +4,14 @@ plotseries <-function(series,
                       labels = NA,
                       add.labels = TRUE,
                       add.returns = TRUE,
-                      add.dollars = TRUE,
+                      add.dollars = FALSE,
                       add.last = FALSE,
                       lab.fun = NULL,
-                      labels.cex = 0.7,
+                      labels.cex = 0.75,
                       labels.pos = 4,
                       labels.col = NULL,
+                      labels.at = NULL,
+                      labels.min.height = 0.05,
                       log.scale = FALSE,
                       ylab = "",
                       ylim = NULL,
@@ -21,6 +23,8 @@ plotseries <-function(series,
                       add1 = TRUE,
                       y.axis = TRUE,
                       y.axis.pos = "left",
+                      y.grid = TRUE,
+                      y.grid.at = NULL,
                       time.axis = TRUE,
                       time.labels.at = NULL,
                       time.labels.format = NULL,
@@ -29,6 +33,7 @@ plotseries <-function(series,
                       time.grid.at = NULL,
                       add.yearly.grid = FALSE,
                       mar = c(1.25,4,1.25,4.5),
+                      mgp = c(2, 0.25, 0),
                       cex.axis = 1,
                       white.underlay = FALSE,
                       font.family = "Gentium Plus",
@@ -80,7 +85,7 @@ plotseries <-function(series,
         tck = 0.01,
         family = font.family,
         ps = 9.5,
-        mgp = c(2, 0.25, 0),
+        mgp = mgp,
         col.axis = grey(.5),
         cex.axis = cex.axis)
 
@@ -125,12 +130,14 @@ plotseries <-function(series,
             axis(4, lwd = 0, at = x2,
                  labels = format(x2, big.mark = big.mark))
     }
-    if (xpd.hlines)
-        par(xpd = TRUE)
-    abline(h = x2, lwd = 0.25, col = grid.col)
-    if (xpd.hlines)
-        par(xpd = FALSE)
 
+    if (y.grid) {
+        if (xpd.hlines)
+            par(xpd = TRUE)
+        abline(h = x2, lwd = 0.25, col = grid.col)
+        if (xpd.hlines)
+            par(xpd = FALSE)
+    }
 
     ## x1 <- seq(as.Date("1871-1-1"),
     ##           as.Date("2020-1-1"), by = "1 years")
@@ -207,8 +214,18 @@ plotseries <-function(series,
 
 
         if (series.type == "level") {
-            y.temp <- na.locf(series)
-            y <- coredata(tail(y.temp, 1))
+            if (is.null(labels.at)) {
+                y.temp <- na.locf(series)
+                y <- coredata(tail(y.temp, 1))
+            } else if (is.numeric(labels.at)) {
+                y <- labels.at
+            } else if (labels.at == "auto") {
+                y <- .spread_labels(
+                    y = drop(coredata(tail(series, 1))),
+                    y.min = labels.min.height,
+                    y.range = diff(par("usr")[3:4]),
+                    log.scale = log.scale)
+            }
         } else if (series.type == "fan") {
             lab <- paste("median ", .fmt_r(median(R)))  ## FIXME
             y.temp <- na.locf(series)
@@ -301,5 +318,47 @@ plotseries <-function(series,
     }
     lines(t, apply(P, 1, median))
     invisible(NULL)
+}
+
+
+.spread_labels <- function(y, x = NULL,
+                           y.min, x.min = NULL,
+                           y.range, x.range = NULL,
+                           log.scale = FALSE) {
+
+    y.original <- y
+
+    if (log.scale)
+        y <- log(y, 10)
+    h <- y.min*y.range/2
+
+    ii <- order(y, decreasing = TRUE)
+    y <- sort(y, decreasing = TRUE)
+    y0 <- y
+
+    .overlap <- function(y, y0, h) {
+        yy <- y[-length(y)] - y[-1] - 2*h
+        sum(abs(y - y0)) - sum(yy - abs(yy))/2
+    }
+
+    if (.overlap(y, y0, h) == 0)
+        return(y.original)
+
+    nb <- neighbours::neighbourfun(type = "numeric",
+                   stepsize = 0.01,
+                   n = length(y),
+                   min = rep(-5, length(y)),
+                   max =  rep(5, length(y)))
+
+    sol <- NMOF::LSopt(.overlap,
+                       list(x0 = y0,
+                            neighbour = nb,
+                            nI = 500),
+                       y0 = y0, h = h)
+    ans <- numeric(length(y))
+    ans[ii] <- sol$xbest
+    if (log.scale)
+        ans <- 10^ans
+    ans
 }
 

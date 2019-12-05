@@ -6,7 +6,7 @@
 \description{
 
   Plot a financial time-series and add annotation, such as total return.
-  
+
 }
 \usage{
 plotseries(series, col, ...,
@@ -48,9 +48,9 @@ plotseries(series, col, ...,
     character
   }
   \item{add.labels}{
-    
+
     logical: a vector with as many elements as series has columms
-    
+
   }
   \item{add.returns}{
     logical
@@ -98,10 +98,10 @@ plotseries(series, col, ...,
     logical
   }
   \item{time.axis}{
-    logical    
+    logical
 }
   \item{time.labels.at}{
-..    
+..
 }
   \item{time.labels.format}{
     ..
@@ -119,7 +119,7 @@ plotseries(series, col, ...,
     ..
 }
   \item{mar}{
-    ..    
+    ..
 }
   \item{cex.axis}{
     numeric
@@ -177,17 +177,14 @@ plotseries(series, col, ...,
 
   The function calls \code{\link{plot}}. Its is very
   experimental; its argument list is not stable.
-  
-  
 
-  
+
+
+
 }
 \value{
   Called for its side effect.
 }
-%% \references{
-%% %% ~put references to the literature/web site here ~
-%% }
 \author{
   Enrico Schumann
 }
@@ -195,7 +192,7 @@ plotseries(series, col, ...,
 \seealso{
 
   \code{\link{plot}}
-  
+
 }
 \examples{
 \donttest{
@@ -207,10 +204,10 @@ series <- French("~/Downloads/French/",
 series <- zoo(series, as.Date(row.names(series)))
 
 plotseries(series,
-             col = hcl.colors(n = 30, palette = "Greens"),
-             add.dollars = FALSE,          
-             log.scale = TRUE,
-             labels = colnames(series))
+           col = hcl.colors(n = 30, palette = "Greens"),
+           add.dollars = FALSE,
+           log.scale = TRUE,
+           labels = colnames(series))
 }
 }
 \keyword{hplot}
