@@ -1,17 +1,23 @@
 export("plotseries")
+S3method("plotseries", "default")
+S3method("plotseries", "zoo")
+
+
+importFrom("stats",
+           "median", "quantile")
 
 importFrom("grDevices",
            "grey")
 
 importFrom("graphics",
            "abline", "axTicks", "axis", "axis.Date",
-           "lines", "par", "plot", "text", "mtext")
+           "lines", "par", "plot", "text", "mtext", "polygon")
 
-importFrom("utils", "tail")
+importFrom("utils",
+           "tail", "head")
 
-importFrom("PMwR", "returns", "scale1")
+importFrom("PMwR", "returns", "scale1", "streaks")
 
-importFrom("utils", "head")
 importFrom("zoo", "index", "coredata", "na.locf")
 
 importFrom("datetimeutils", "first_of_year")

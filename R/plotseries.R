@@ -1,66 +1,115 @@
-plotseries <-function(series,
-                      col,
-                      ...,
-                      labels = NA,
-                      add.labels = TRUE,
-                      add.returns = TRUE,
-                      add.dollars = FALSE,
-                      add.last = FALSE,
-                      lab.fun = NULL,
-                      labels.cex = 0.75,
-                      labels.pos = 4,
-                      labels.col = NULL,
-                      labels.at = NULL,
-                      labels.min.height = 0.05,
-                      log.scale = FALSE,
-                      ylab = "",
-                      ylim = NULL,
-                      lwd = 1,
-                      main = "",
-                      main.cex = 0.7,
-                      main.col = grey(0.5),
-                      add0 = FALSE,
-                      add1 = TRUE,
-                      y.axis = TRUE,
-                      y.axis.pos = "left",
-                      y.grid = TRUE,
-                      y.grid.at = NULL,
-                      time.axis = TRUE,
-                      time.labels.at = NULL,
-                      time.labels.format = NULL,
-                      time.labels = TRUE,
-                      time.grid = TRUE,
-                      time.grid.at = NULL,
-                      add.yearly.grid = FALSE,
-                      mar = c(1.25,4,1.25,4.5),
-                      mgp = c(2, 0.25, 0),
-                      cex.axis = 1,
-                      white.underlay = FALSE,
-                      font.family = "Gentium Plus",
-                      arrow = "\u2192",
-                      currency = "USD",
-                      colon = ": ",
-                      percent = "%",
-                      big.mark = "'",
-                      bm = NULL,
-                      show.returns = FALSE,
-                      do.scale1 = FALSE,
-                      xpd.hlines = FALSE,
-                      xpd.vlines = FALSE,
-                      grid.col = grey(0.8),
-                      returns.period = "ann",
-                      series.type = "level",
-                      probs = NULL
-                      ) {
+## -*- truncate-lines: t; -*-
+## Copyright (C) 2019  Enrico Schumann
 
+plotseries <- function(series, ...) {
+    UseMethod("plotseries")
+}
+
+plotseries.zoo <- function(series, ...) {
+    t <- index(series)
+    series <- coredata(series)
+    plotseries.default(series, t = t, ...)
+}
+
+plotseries.default <-
+function(series,
+         t,
+         col,
+         log.scale = FALSE,
+         labels = NA,
+         labels.show = TRUE,
+         labels.cex = 0.75,
+         labels.pos = 4,
+         labels.col = NULL,
+         labels.at = NULL,
+         labels.min.height = 0.05,
+
+         returns.show = TRUE,
+         returns.period = "ann",
+
+         dollars.show = FALSE,
+         dollars.arrow = "\u2192",
+         dollars.currency = "USD",
+
+         last.show = FALSE,
+
+
+
+
+         ylab = "",
+         ylim = NULL,
+
+         lwd = 1,
+
+         main = "",
+         main.cex = 0.7,
+         main.col = grey(0.5),
+
+         y.axis = TRUE,
+         y.axis.pos = "left",
+
+         y.grid = TRUE,
+         y.grid.at = NULL,
+         y.grid.col = grey(0.8),
+
+         y.labels = TRUE,
+         y.labels.at = NULL,
+         y.labels.at.add = 1,
+         y.labels.at.remove = 0,
+
+         time.axis = TRUE,
+
+         time.grid = TRUE,
+         time.grid.at = NULL,
+         time.grid.col = grey(0.8),
+
+         time.labels = TRUE,
+         time.labels.at = NULL,
+         time.labels.format = NULL,
+
+
+         add.yearly.grid = FALSE,  ## remove?
+
+         mar = c(1.25,4,1.25,4.5),
+         mgp = c(2, 0.25, 0),
+
+         axis.cex = 1,
+         axis.col = grey(0.5),
+
+         white.underlay = FALSE,
+         white.underlay.width = 2,
+
+         ## font.family = "Gentium Plus",
+         font.family = "",
+
+         colon = ": ",
+         percent = "%",
+         big.mark = "'",
+         bm = NULL,
+
+         xpd.hlines = FALSE,
+         xpd.vlines = FALSE,
+
+         series.type = "level",
+         lines = FALSE,
+         
+         probs = NULL,
+         streaks.up = 0.2,
+         streaks.down = -0.2,
+         ...
+
+
+         ) {
+
+    force(bm)
     .fmt_r <- function(x)
         format(round(x*100, 1), nsmall = 1)
 
     ylab <- paste(ylab, collapse = "")
 
-    R <- returns(series, period = returns.period)
+    R <- returns(series, t = t, period = returns.period)
     if (!is.null(bm)) {
-        R.bm <- returns(bm, period = returns.period)
+        R.bm <- returns(bm, t = t, period = returns.period)
         R <- R - R.bm
         series <- scale1(series/bm)
         if (show.returns)
@@ -86,55 +135,104 @@ plotseries <-function(series,
         family = font.family,
         ps = 9.5,
         mgp = mgp,
-        col.axis = grey(.5),
-        cex.axis = cex.axis)
+        col.axis = axis.col,
+        cex.axis = axis.cex)
 
+    series <- as.matrix(series)
     if (series.type == "level") {
-        plot(series[, 1L],
-             plot.type = "single",
-             main = "",
-             xlab = "",
-             col = if (white.underlay) "white" else col[1L],
-             ylab = ylab,
-             log = if (log.scale) "y" else "",
-             xaxt = "n",
-             yaxt = "n",
-             lwd = if (white.underlay) lwd*2 else lwd,
-             ylim = ylim, ...)
+
+        if (!lines)
+            plot(t,
+                 series[, 1L],
+                 type = "l",
+                 main = "",
+                 xlab = "",
+                 col = if (white.underlay) "white" else col[1L],
+                 ylab = ylab,
+                 log = if (log.scale) "y" else "",
+                 xaxt = "n",
+                 yaxt = "n",
+                 lwd = if (white.underlay) lwd*white.underlay.width else lwd,
+                 ylim = ylim, ...)
+
     } else if (series.type == "fan") {
 
-        .fan.default(series,
-                     t = index(series),
-                     n.levels = 5,
-                     probs = probs,
-                     lines = FALSE,
-                     log.scale = log.scale,
-                     initial.value = 1,
-                     add.median = TRUE)
+        if (!lines)            
+            plot(t,
+                 rep(100, length(t)),
+                 ylim = range(series),
+                 xlab = "",
+                 ylab = "",
+                 lty = 0,
+                 type = "n",
+                 log = if (log.scale) "y" else "",
+                 xaxt = "n",
+                 yaxt = "n")            
+        
+        .fan(series,
+             t = t,
+             n.levels = 5,
+             probs = probs,
+             lines = FALSE,
+             log.scale = log.scale,
+             ## initial.value = 1,
+             median.show = TRUE,
+             mar = mar,
+             ...)
+
+    } else if (series.type == "streaks") {
+        
+        up_down <- streaks(series,
+                           up = streaks.up,
+                           down = streaks.down,
+                           y = bm)
+
+        if (!lines)
+            plot(t,
+                 rep(100, length(t)),
+                 ylim = range(100*up_down$return+100),
+                 xlab = "",
+                 ylab = "",
+                 lty = 0,
+                 type = "n",
+                 main = "",
+                 log = "y", ## always log scale
+                 xaxt = "n",
+                 yaxt = "n")
+        
+        ## .streaks(series[, 1], t = t, streaks = up_down, ...)
+        
+    } else if (series.type == "drawdown") {
+
+    } else if (series.type == "returns") {
 
     }
     if (main != "")
         mtext(main, 3, cex = main.cex, col = grey(0.5))
 
     x2 <- axTicks(2)
-    if (add1)
-        x2 <- unique(sort(c(1, setdiff(x2, 0))))
-    else if (add0)
-        x2 <- unique(sort(c(0, setdiff(x2, 1))))
+    if (length(y.labels.at.add))
+        x2 <- unique(sort(c(y.labels.at.add, x2)))
+
+    if (length(y.labels.at.remove))
+        x2 <- setdiff(x2, y.labels.at.remove)
 
     if (y.axis) {
+        y_ <- x2
+        if (series.type == "streaks")
+            y_ <- y_ - 100
         if (y.axis.pos %in% c("left", "both"))
             axis(2, lwd = 0, at = x2,
-                 labels = format(x2, big.mark = big.mark))
+                 labels = format(y_, big.mark = big.mark))
         if (y.axis.pos %in% c("right", "both"))
             axis(4, lwd = 0, at = x2,
-                 labels = format(x2, big.mark = big.mark))
+                 labels = format(y_, big.mark = big.mark))
     }
 
     if (y.grid) {
         if (xpd.hlines)
             par(xpd = TRUE)
-        abline(h = x2, lwd = 0.25, col = grid.col)
+        abline(h = x2, lwd = 0.25, col = y.grid.col)
         if (xpd.hlines)
             par(xpd = FALSE)
     }
@@ -144,7 +242,7 @@ plotseries <-function(series,
 
     if (time.axis)
         if (is.null(time.labels.at))
-            xx <- axis.Date(1, lwd = 0, x = index(series))
+            xx <- axis.Date(1, lwd = 0, x = t)
         else {
             if (is.null(time.labels.format))
                 axis.Date(1, lwd = 0, at = time.labels.at)
@@ -155,16 +253,15 @@ plotseries <-function(series,
                           labels = time.labels)
         }
     else
-        xx <- axis.Date(1, lwd = 0, x = index(series),
-                        labels = FALSE)
+        xx <- axis.Date(1, lwd = 0, x = t, labels = FALSE)
 
     if (time.grid) {
         if (xpd.vlines)
             par(xpd = TRUE)
         if (is.null(time.grid.at))
-            abline(v = xx, lwd = 0.25, col = grid.col)
+            abline(v = xx, lwd = 0.25, col = time.grid.col)
         else
-            abline(v = time.grid.at, lwd = 0.25, col = grid.col)
+            abline(v = time.grid.at, lwd = 0.25, col = time.grid.col)
         if (xpd.vlines)
             par(xpd = FALSE)
     }
@@ -172,20 +269,22 @@ plotseries <-function(series,
     if (!is.null(time.grid.at)) {
         abline(v = time.grid.at, lwd = 0.25, col = grey(0.8))
     } else if (add.yearly.grid) {
-        x1 <- seq(first_of_year(head(index(series), 1)),
-                  first_of_year(tail(index(series), 1)), by = "1 year")
+        x1 <- seq(first_of_year(head(t, 1)),
+                  first_of_year(tail(t, 1)), by = "1 year")
         abline(v = x1, lwd = 0.25, col = grey(0.8))
     }
 
     if (series.type == "level") {
-        lines(series[, 1],  col = col[1], ...)
+        lines(t, series[, 1],  col = col[1L], lwd = lwd, ...)
 
         if (NCOL(series) > 1)
             for (i in 2:ncol(series)) {
                 if (white.underlay)
-                    lines(series[, i], col = "white", lwd = 2*lwd, ...)
-                lines(series[, i], col = col[i], ...)
+                    lines(t, series[, i], col = "white", lwd = 2*lwd, ...)
+                lines(t, series[, i], col = col[i], ...)
             }
+    } else if (series.type == "streaks") {
+        .streaks(series[, 1], t = t, streaks = up_down, ...)        
     }
 
     if (!isFALSE(labels)) {
@@ -195,20 +294,20 @@ plotseries <-function(series,
         lab <- labels
         lab[is.na(lab)] <- ""
 
-        if (add.returns)
+        if (returns.show)
             lab <- paste0(lab, ifelse(do.show, colon, ""),
                           .fmt_r(R), "%")
-        if (add.last)
+        if (last.show)
             lab <- paste0(lab, colon,
                           paste0(round(coredata(tail(series, 1)), 1)))
-        if (!is.null(lab.fun)) {
-            if (NCOL(series) == 1)
-                lab <- paste0(lab, colon, lab.fun(series))
-            else
-                for (i in 1:NCOL(series))
-                    lab[i] <- paste0(lab[i], colon, lab.fun(series[, i]))
-        }
-        if (add.dollars)
+        ## if (!is.null(lab.fun)) {
+        ##     if (NCOL(series) == 1)
+        ##         lab <- paste0(lab, colon, lab.fun(series))
+        ##     else
+        ##         for (i in 1:NCOL(series))
+        ##             lab[i] <- paste0(lab[i], colon, lab.fun(series[, i]))
+        ## }
+        if (dollars.show)
             lab <- paste0(lab, "\n", currency ," 1 ", arrow, " ",
                           round(coredata(tail(series, 1))))
 
@@ -216,7 +315,7 @@ plotseries <-function(series,
         if (series.type == "level") {
             if (is.null(labels.at)) {
                 y.temp <- na.locf(series)
-                y <- coredata(tail(y.temp, 1))
+                y <- tail(y.temp, 1)
             } else if (is.numeric(labels.at)) {
                 y <- labels.at
             } else if (labels.at == "auto") {
@@ -226,27 +325,28 @@ plotseries <-function(series,
                     y.range = diff(par("usr")[3:4]),
                     log.scale = log.scale)
             }
+            if (any(is.na(y[do.show]))) {
+                warning("NA in series: series/labels may be missing")
+            }
+            if (isTRUE(labels.col))
+                labels.col <- col[do.show]
+            if (any(do.show)) {
+                par(xpd = TRUE)
+                text(max(t),
+                     y[do.show],
+                     lab[do.show],
+                     pos = labels.pos,
+                     cex = labels.cex,
+                     col = labels.col)
+                par(xpd = FALSE)
+            }
+
         } else if (series.type == "fan") {
             lab <- paste("median ", .fmt_r(median(R)))  ## FIXME
             y.temp <- na.locf(series)
             y <- median(coredata(tail(y.temp, 1)))
         }
 
-        if (any(is.na(y[do.show]))) {
-            warning("NA in series: series/labels may be missing")
-        }
-        if (isTRUE(labels.col))
-            labels.col <- col[do.show]
-        if (any(do.show)) {
-            par(xpd = TRUE)
-            text(max(index(series)),
-                 y[do.show],
-                 lab[do.show],
-                 pos = labels.pos,
-                 cex = labels.cex,
-                 col = labels.col)
-            par(xpd = FALSE)
-        }
     }
     invisible(NULL)
 }
@@ -264,13 +364,12 @@ plotseries <-function(series,
                  log.scale = log.scale, ...)
 }
 
-.fan.default <- function(P, t, n.levels = 5,
-                         probs = NULL,
-                         lines = FALSE,
-                         log.scale = FALSE,
-                         initial.value = 1,
-                         add.median = TRUE,
-                         ...) {
+.fan <- function(P, t, n.levels = 5,
+                 probs = NULL,
+                 log.scale = FALSE,
+                 initial.value = 1,
+                 median.show = TRUE,
+                 ...) {
 
     if (is.finite(initial.value))
         P <- scale1(P, level = initial.value)
@@ -286,40 +385,37 @@ plotseries <-function(series,
 
     args <- list(...)
 
-    if (!lines) {
-        par(las = 1,
-            bty = "n",
-            mar = c(1.25,4,1.25,4.5),
-            tck = 0.01,
-            ps = 9.5,
-            mgp = c(2, 0.25, 0),
-            col.axis = grey(.5),
-            cex.axis = 1)
-
-        plot(t, rep(100, nt),
-             ylim = range(P),
-             xlab = "",
-             ylab = "",
-             lty = 0,
-             type = "n",
-             log = if (log.scale) "y" else "",
-             xaxt = "n",
-             yaxt = "n")
-
-    }
-
     for (level in levels) {
-
         l <- apply(P, 1, quantile, level)
         u <- apply(P, 1, quantile, 1 - level)
         col <- grey(greys[level == levels])
         polygon(c(t, rev(t)), c(l, rev(u)),
                 col = col, border = NA)
     }
-    lines(t, apply(P, 1, median))
+    if (median.show)
+        lines(t, apply(P, 1, median))
     invisible(NULL)
 }
 
+.streaks <- function(x,
+                     t,
+                     streaks,
+                     ...) {
+
+    
+    ## x <- axis.Date(1, index(dax), lwd = 0)
+    ## abline(v = x, col = grey(0.7), lwd = 0.25)
+
+    ## axis(2, lwd = 0, at = axTicks(2), labels = axTicks(2)-100)
+    ## abline(h = 100, lwd = 0.5, col = grey(.5))
+    ## abline(h = axTicks(2), col = grey(0.7), lwd = 0.25)
+
+    for (i in seq_len(nrow(streaks))) {
+        tt <- seq(streaks$start[i], streaks$end[i])
+        lines(t[tt], scale1(x[tt], level = 100))
+    }
+
+}
 
 .spread_labels <- function(y, x = NULL,
                            y.min, x.min = NULL,

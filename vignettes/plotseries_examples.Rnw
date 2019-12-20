@@ -1,0 +1,97 @@
+%% \VignetteIndexEntry{Example for plotseries}
+\documentclass[a4paper,11pt]{article}
+\usepackage[left = 3cm, top = 2cm, bottom = 2cm, right = 4cm]{geometry}
+\usepackage[noae,nogin]{Sweave}
+\usepackage{libertine}
+\usepackage[scaled=0.9]{inconsolata}
+\usepackage[T1]{fontenc}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage{amsmath,amstext}
+\usepackage{hyperref}
+\usepackage{natbib}
+\usepackage{xcolor}
+\usepackage{framed}
+\usepackage[flushmargin]{footmisc}
+\definecolor{grau2}{rgb}{.2,.2,.2}
+\definecolor{grau7}{rgb}{.7,.7,.7}
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{frame=single,
+  xleftmargin=0em, formatcom=\color{grau2},rulecolor=\color{grau7}}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{xleftmargin=2em}
+\fvset{listparameters={\setlength{\topsep}{0pt}}}
+\renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
+\SweaveOpts{keep.source = TRUE, eps = TRUE}
+
+<<echo=false>>=
+options(continue = "  ", digits = 3, width = 60, useFancyQuotes = FALSE)
+pv <- packageVersion("plotseries")
+pv <- gsub("(.*)[.](.*)", "\\1-\\2", pv)
+@
+
+\begin{document}
+\title{Examples for the \texttt{plotseries} package}
+\author{Enrico Schumann\\\url{es@enricoschumann.net}}
+
+{\raggedright{\LARGE Examples for the plotseries package}}\hspace*{\fill}
+{\footnotesize Package version \Sexpr{pv}}\medskip
+
+\noindent Enrico Schumann\\
+\noindent \url{es@enricoschumann.net}\\
+\bigskip
+
+<<echo=false>>=
+library("plotseries")
+library("NMOF")
+library("PMwR")
+@
+
+<<fig = TRUE, height = 3, width=5>>=
+x <- rnorm(100, mean = 0, sd = 0.01)
+t <- as.Date("2019-1-1") + seq_along(x)
+plotseries(x, t, col = "blue")
+@
+
+<<fig = TRUE, height = 3, width=5>>=
+plotseries(cumprod(1+x), t, col = "blue",
+           labels = "X",
+           returns.show = TRUE)
+@
+
+Relative plots
+\citet{schumann2013b}
+
+\section*{Streaks}
+
+These charts rely on function
+\texttt{streaks} in package \texttt{PMwR}.
+The vertical axis always uses a log scale, so
+that a drop of 50\% takes the same vertical
+distance as a rise of 100\%.
+<<fig = TRUE, height=3, width=5>>=
+x <- DAX[[1]]
+t <- as.Date(rownames(DAX))
+plotseries(x, t, series.type = "streaks")
+@ 
+
+\section*{Fancharts}
+
+\citet{Gilli2019}
+
+
+<<fig = TRUE, height=3, width=5>>=
+x <- gbm(100, 20, 0, 0.01^2,1, S0 = 100)
+t <- as.Date("2019-1-1") + seq_len(nrow(x))
+plotseries(x,
+           t,
+           col = "blue",
+           labels = "X",
+           returns.show = TRUE,
+           series.type = "fan")
+@
+
+
+
+\bibliographystyle{plainnat}
+\bibliography{plotseries}
+
+\end{document}
