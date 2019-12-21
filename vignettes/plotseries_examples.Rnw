@@ -41,7 +41,8 @@ pv <- gsub("(.*)[.](.*)", "\\1-\\2", pv)
 
 <<echo=false>>=
 library("plotseries")
-library("NMOF")
+if (!require("NMOF"))
+    stop("package ", sQuote("NMOF"), " is required for this vignette")
 library("PMwR")
 @
 
@@ -71,21 +72,26 @@ distance as a rise of 100\%.
 x <- DAX[[1]]
 t <- as.Date(rownames(DAX))
 plotseries(x, t, series.type = "streaks")
-@ 
+@
 
 \section*{Fancharts}
 
 \citet{Gilli2019}
 
-
+Suppose you wanted to plot many paths.
 <<fig = TRUE, height=3, width=5>>=
-x <- gbm(100, 20, 0, 0.01^2,1, S0 = 100)
+x <- gbm(100, 20, r=0.01, 0.01^2,1, S0 = 100)
 t <- as.Date("2019-1-1") + seq_len(nrow(x))
 plotseries(x,
            t,
-           col = "blue",
-           labels = "X",
-           returns.show = TRUE,
+           col = rep(grey(.5), ncol(x)))
+@
+
+A fanplot of the same data.
+
+<<fig = TRUE, height=3, width=5>>=
+plotseries(x,
+           t,
            series.type = "fan")
 @
 

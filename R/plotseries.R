@@ -92,7 +92,7 @@ function(series,
 
          series.type = "level",
          lines = FALSE,
-         
+
          probs = NULL,
          streaks.up = 0.2,
          streaks.down = -0.2,
@@ -101,7 +101,6 @@ function(series,
 
          ) {
 
-    force(bm)
     .fmt_r <- function(x)
         format(round(x*100, 1), nsmall = 1)
 
@@ -157,7 +156,7 @@ function(series,
 
     } else if (series.type == "fan") {
 
-        if (!lines)            
+        if (!lines)
             plot(t,
                  rep(100, length(t)),
                  ylim = range(series),
@@ -167,8 +166,8 @@ function(series,
                  type = "n",
                  log = if (log.scale) "y" else "",
                  xaxt = "n",
-                 yaxt = "n")            
-        
+                 yaxt = "n")
+
         .fan(series,
              t = t,
              n.levels = 5,
@@ -181,7 +180,7 @@ function(series,
              ...)
 
     } else if (series.type == "streaks") {
-        
+
         up_down <- streaks(series,
                            up = streaks.up,
                            down = streaks.down,
@@ -199,9 +198,9 @@ function(series,
                  log = "y", ## always log scale
                  xaxt = "n",
                  yaxt = "n")
-        
+
         ## .streaks(series[, 1], t = t, streaks = up_down, ...)
-        
+
     } else if (series.type == "drawdown") {
 
     } else if (series.type == "returns") {
@@ -284,7 +283,7 @@ function(series,
                 lines(t, series[, i], col = col[i], ...)
             }
     } else if (series.type == "streaks") {
-        .streaks(series[, 1], t = t, streaks = up_down, ...)        
+        .streaks(series[, 1], t = t, streaks = up_down, ...)
     }
 
     if (!isFALSE(labels)) {
@@ -367,12 +366,12 @@ function(series,
 .fan <- function(P, t, n.levels = 5,
                  probs = NULL,
                  log.scale = FALSE,
-                 initial.value = 1,
+                 ## initial.value = 100,
                  median.show = TRUE,
                  ...) {
 
-    if (is.finite(initial.value))
-        P <- scale1(P, level = initial.value)
+    ## if (is.finite(initial.value))
+    ##     P <- scale1(P, level = initial.value)
     if (is.null(dim) || ncol(P) == 1L)
         warning("a single series makes a slim fan")
     nt <- nrow(P)
@@ -402,7 +401,7 @@ function(series,
                      streaks,
                      ...) {
 
-    
+
     ## x <- axis.Date(1, index(dax), lwd = 0)
     ## abline(v = x, col = grey(0.7), lwd = 0.25)
 
