@@ -43,56 +43,83 @@ pv <- gsub("(.*)[.](.*)", "\\1-\\2", pv)
 library("plotseries")
 if (!require("NMOF"))
     stop("package ", sQuote("NMOF"), " is required for this vignette")
-library("PMwR")
 @
 
-<<fig = TRUE, height = 3, width=5>>=
-x <- rnorm(100, mean = 0, sd = 0.01)
-t <- as.Date("2019-1-1") + seq_along(x)
-plotseries(x, t, col = "blue")
+\section*{Time-series plots}
+
+Start with a classic time-series plot: We look at
+time-series of the Fama--French factors
+\citep{fama1992}.
+
+<<fig = TRUE, height = 3, width=6>>=
+series <- French("~/Downloads/French/",
+                 "F-F_Research_Data_Factors_daily_CSV.zip",
+                 frequency = "daily",
+                 price.series = TRUE)
+plotseries(series, t = as.Date(row.names(series)),
+           col = hcl.colors(n = 12, palette = "Dark 2"),
+           log.scale = TRUE,
+           dollars.show = FALSE,
+           labels = c("Market\n(excess return)",
+                      "SMB", "HML", "RF"))
 @
 
-<<fig = TRUE, height = 3, width=5>>=
-plotseries(cumprod(1+x), t, col = "blue",
-           labels = "X",
-           returns.show = TRUE)
+Total return of the market.
+<<fig = TRUE, height = 3, width=6>>=
+market <- French("~/Downloads/French/",
+                 "market",
+                 frequency = "daily",
+                 price.series = TRUE)
+plotseries(market,
+           t = as.Date(row.names(series)),
+           col = hcl.colors(n = 12, palette = "Dark 2"),
+           log.scale = TRUE,
+           dollars.show = TRUE,
+           labels = c("Market\n(total return)"))
 @
 
-Relative plots
-\citet{schumann2013b}
+For relative plots \citep{schumann2013b}, use the
+\texttt{bm} argument.
+
+TODO example
+
+TODO explain returns calculation
+
+
 
 \section*{Streaks}
 
-These charts rely on function
-\texttt{streaks} in package \texttt{PMwR}.
-The vertical axis always uses a log scale, so
-that a drop of 50\% takes the same vertical
-distance as a rise of 100\%.
-<<fig = TRUE, height=3, width=5>>=
-x <- DAX[[1]]
-t <- as.Date(rownames(DAX))
-plotseries(x, t, series.type = "streaks")
+These charts rely on function \texttt{streaks} in
+package \texttt{PMwR}. It breaks the series into
+subperiods of uninterrupted up and down movements --
+streaks -- in a price series.  Uninterrupted is meant
+in the sense that no countermovement of
+\texttt{streaks.down} (\texttt{streaks.up}) percent or
+more occurs in up (down) movements.  The vertical axis
+always uses a log scale, so that a drop of 50\% takes
+the same vertical distance as a rise of 100\%.
+<<fig=TRUE, height=3, width=6>>=
+plotseries(market,
+           t = as.Date(row.names(series)),
+           series.type = "streaks")
 @
 
 \section*{Fancharts}
 
-\citet{Gilli2019}
+Fanplots build on code of \citet[Chapter~15]{Gilli2019}.
+
 
 Suppose you wanted to plot many paths.
-<<fig = TRUE, height=3, width=5>>=
+<<fig = TRUE, height=3, width=6>>=
 x <- gbm(100, 20, r=0.01, 0.01^2,1, S0 = 100)
 t <- as.Date("2019-1-1") + seq_len(nrow(x))
-plotseries(x,
-           t,
-           col = rep(grey(.5), ncol(x)))
+plotseries(x, t, col = rep(grey(.5), ncol(x)))
 @
 
 A fanplot of the same data.
 
-<<fig = TRUE, height=3, width=5>>=
-plotseries(x,
-           t,
-           series.type = "fan")
+<<fig = TRUE, height=3, width=6>>=
+plotseries(x, t, series.type = "fan")
 @
 
 

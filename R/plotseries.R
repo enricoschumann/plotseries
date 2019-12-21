@@ -307,8 +307,8 @@ function(series,
         ##             lab[i] <- paste0(lab[i], colon, lab.fun(series[, i]))
         ## }
         if (dollars.show)
-            lab <- paste0(lab, "\n", currency ," 1 ", arrow, " ",
-                          round(coredata(tail(series, 1))))
+            lab <- paste0(lab, "\n", dollars.currency ," 1 ", dollars.arrow, " ",
+                          round(tail(series, 1)))
 
 
         if (series.type == "level") {
