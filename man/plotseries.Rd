@@ -1,5 +1,7 @@
 \name{plotseries}
 \alias{plotseries}
+\alias{plotseries.default}
+\alias{plotseries.zoo}
 \title{
   Plot a Financial Time-Series
 }
@@ -38,6 +40,9 @@ plotseries(series, ...)
     xpd.hlines = FALSE, xpd.vlines = FALSE,
     series.type = "level", lines = FALSE,
     probs = NULL, streaks.up = 0.2, streaks.down = -0.2, \dots)
+
+\method{plotseries}{zoo}(series, \dots)
+
 }
 \arguments{
   \item{series}{
@@ -138,8 +143,8 @@ plotseries(series, ...)
   \item{font.family}{
     logical
 }
-  \item{arrow}{
-    character
+  \item{dollars.arrow}{
+    character. A safe choice (because it is \acronym{ASCII} is \code{->}.
 }
   \item{currency}{
     character

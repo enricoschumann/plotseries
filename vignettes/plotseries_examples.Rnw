@@ -41,6 +41,8 @@ pv <- gsub("(.*)[.](.*)", "\\1-\\2", pv)
 
 <<echo=false>>=
 library("plotseries")
+if (!require("PMwR"))
+    stop("package ", sQuote("PMwR"), " is required for this vignette")
 if (!require("NMOF"))
     stop("package ", sQuote("NMOF"), " is required for this vignette")
 @
@@ -56,12 +58,11 @@ series <- French("~/Downloads/French/",
                  "F-F_Research_Data_Factors_daily_CSV.zip",
                  frequency = "daily",
                  price.series = TRUE)
-plotseries(series, t = as.Date(row.names(series)),
+plotseries(series,
+           t = as.Date(row.names(series)),
            col = hcl.colors(n = 12, palette = "Dark 2"),
            log.scale = TRUE,
-           dollars.show = FALSE,
-           labels = c("Market\n(excess return)",
-                      "SMB", "HML", "RF"))
+           labels = c("Market\n(excess return)", "SMB", "HML", "RF"))
 @
 
 Total return of the market.
@@ -90,19 +91,61 @@ TODO explain returns calculation
 \section*{Streaks}
 
 These charts rely on function \texttt{streaks} in
-package \texttt{PMwR}. It breaks the series into
+package \texttt{PMwR}.  It breaks a series into
 subperiods of uninterrupted up and down movements --
-streaks -- in a price series.  Uninterrupted is meant
-in the sense that no countermovement of
-\texttt{streaks.down} (\texttt{streaks.up}) percent or
-more occurs in up (down) movements.  The vertical axis
-always uses a log scale, so that a drop of 50\% takes
-the same vertical distance as a rise of 100\%.
+streaks.  Uninterrupted is meant in the sense that no
+countermovement of \texttt{streaks.down}
+(\texttt{streaks.up}) percent or more occurs in up
+(down) movements.
 <<fig=TRUE, height=3, width=6>>=
 plotseries(market,
            t = as.Date(row.names(series)),
            series.type = "streaks")
 @
+The vertical axis always uses a log scale, so that a
+drop of 50\%~takes the same vertical distance as a rise
+of~100\%.
+
+
+Sometimes it is also useful to compute relative
+streaks.  Let us look at momentum.
+<<fig=TRUE, height=3, width=6>>=
+series <- French("~/Downloads/French/",
+                 "10_Portfolios_Prior_12_2_Daily_CSV.zip",
+                 frequency = "daily",
+                 price.series = TRUE)
+series <- series[rownames(series) > "1965-1-1", ]
+series <- scale1(series)
+plotseries(series, as.Date(row.names(series)),
+           col = hcl.colors(n = 30, palette = "Greens"),
+           log.scale = TRUE,
+           labels = colnames(series),
+           white.underlay = TRUE)
+@ 
+
+Let us plot the the decile portfolio with the highest
+returns (the winners) against the decile portfolio with
+the lowest returns (the losers).
+<<fig=TRUE, height=3, width=6>>=
+plotseries(series[, 10], as.Date(row.names(series)),
+           col = hcl.colors(n = 30, palette = "Greens")[1],
+           log.scale = TRUE,
+           labels = colnames(series)[10],
+           bm = series[, 1])
+@ 
+Keep in mind that this is on a log scale: so the
+drawdown in the first quarter of 2009, for instance, is
+substantial.
+
+<<fig=TRUE, height=3, width=6>>=
+plotseries(series[, 10], as.Date(row.names(series)),
+           col = hcl.colors(n = 30, palette = "Greens")[1],
+           log.scale = TRUE,
+           labels = colnames(series)[10],
+           bm = series[, 1],
+           series.type = "streaks")
+@ 
+
 
 \section*{Fancharts}
 

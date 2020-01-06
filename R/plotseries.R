@@ -11,6 +11,9 @@ plotseries.zoo <- function(series, ...) {
     plotseries.default(series, t = t, ...)
 }
 
+.fmt_r <- function(x)
+    format(round(x*100, 1), nsmall = 1)
+
 plotseries.default <-
 function(series,
          t,
@@ -70,8 +73,10 @@ function(series,
 
          add.yearly.grid = FALSE,  ## remove?
 
-         mar = c(1.25,4,1.25,4.5),
-         mgp = c(2, 0.25, 0),
+         ## mar = c(1.25,4,1.25,4.5),
+         ## mgp = c(2, 0.25, 0),
+
+         par.list = list(),
 
          axis.cex = 1,
          axis.col = grey(0.5),
@@ -86,6 +91,7 @@ function(series,
          percent = "%",
          big.mark = "'",
          bm = NULL,
+         bm.returns = FALSE,
 
          xpd.hlines = FALSE,
          xpd.vlines = FALSE,
@@ -93,30 +99,48 @@ function(series,
          series.type = "level",
          lines = FALSE,
 
-         probs = NULL,
+         fan.probs = NULL,
          streaks.up = 0.2,
-         streaks.down = -0.2,
+         streaks.down = -streaks.up,
+         streaks.vlines = FALSE,
          ...
 
 
          ) {
 
-    .fmt_r <- function(x)
-        format(round(x*100, 1), nsmall = 1)
+    if (series.type == "streaks") {
+         y.labels.at.add <- numeric(0)
+         y.labels.at.remove <- numeric(0)
+    }
+
+
+
+    par.lst <- list(las = 1,
+                    bty = "n",
+                    mar = c(1.25, 4, 1.25, 4.5),
+                    tck = 0.01,
+                    ps = 9.5,
+                    mgp = c(2, 0.25, 0),
+                    col.axis = grey(0.5))
+
+    par.lst[names(par.list)] <- par.list
+
 
     ylab <- paste(ylab, collapse = "")
 
+    if (missing(col))
+        col <- rep(grey(0.4), NCOL(series))
     R <- returns(series, t = t, period = returns.period)
     if (!is.null(bm)) {
+        bm <- coredata(bm)
         R.bm <- returns(bm, t = t, period = returns.period)
         R <- R - R.bm
-        series <- scale1(series/bm)
-        if (show.returns)
+        if (series.type != "streaks")
+            series <- scale1(series/bm)
+        if (bm.returns)
             series <- 100*(series - 1)
     }
 
-    if (is.null(ylim))
-        ylim <- range(series, na.rm = TRUE)
 
     if (is.character(time.grid.at) &&
         grep("year", time.grid.at, ignore.case = TRUE)) {
@@ -127,18 +151,13 @@ function(series,
                                           by = paste(time.grid.at)))
     }
 
-    par(las = 1,
-        bty = "n",
-        mar = mar,
-        tck = 0.01,
-        family = font.family,
-        ps = 9.5,
-        mgp = mgp,
-        col.axis = axis.col,
-        cex.axis = axis.cex)
+    do.call(par, par.lst)
 
     series <- as.matrix(series)
     if (series.type == "level") {
+
+        if (is.null(ylim))
+            ylim <- range(series, na.rm = TRUE)
 
         if (!lines)
             plot(t,
@@ -156,10 +175,13 @@ function(series,
 
     } else if (series.type == "fan") {
 
+        if (is.null(ylim))
+            ylim <- range(series, na.rm = TRUE)
+
         if (!lines)
             plot(t,
                  rep(100, length(t)),
-                 ylim = range(series),
+                 ylim = ylim,
                  xlab = "",
                  ylab = "",
                  lty = 0,
@@ -171,12 +193,11 @@ function(series,
         .fan(series,
              t = t,
              n.levels = 5,
-             probs = probs,
+             probs = fan.probs,
              lines = FALSE,
              log.scale = log.scale,
              ## initial.value = 1,
              median.show = TRUE,
-             mar = mar,
              ...)
 
     } else if (series.type == "streaks") {
@@ -184,93 +205,97 @@ function(series,
         up_down <- streaks(series,
                            up = streaks.up,
                            down = streaks.down,
-                           y = bm)
-
+                           y = bm,
+                           return.arithmetic = FALSE)
+        if (is.null(ylim))
+            ylim <- range(100*up_down$return + 100)
         if (!lines)
             plot(t,
                  rep(100, length(t)),
-                 ylim = range(100*up_down$return+100),
+                 ylim = ylim,
                  xlab = "",
                  ylab = "",
                  lty = 0,
                  type = "n",
                  main = "",
-                 log = "y", ## always log scale
+                 log = "y", ## if (is.null(bm)) "y" else "", ## relative: *no* log scale
                  xaxt = "n",
                  yaxt = "n")
-
-        ## .streaks(series[, 1], t = t, streaks = up_down, ...)
 
     } else if (series.type == "drawdown") {
 
     } else if (series.type == "returns") {
 
     }
-    if (main != "")
-        mtext(main, 3, cex = main.cex, col = grey(0.5))
 
-    x2 <- axTicks(2)
-    if (length(y.labels.at.add))
-        x2 <- unique(sort(c(y.labels.at.add, x2)))
+    if (!lines) {
 
-    if (length(y.labels.at.remove))
-        x2 <- setdiff(x2, y.labels.at.remove)
+        if (main != "")
+            mtext(main, 3, cex = main.cex, col = grey(0.5))
 
-    if (y.axis) {
-        y_ <- x2
-        if (series.type == "streaks")
-            y_ <- y_ - 100
-        if (y.axis.pos %in% c("left", "both"))
-            axis(2, lwd = 0, at = x2,
-                 labels = format(y_, big.mark = big.mark))
-        if (y.axis.pos %in% c("right", "both"))
-            axis(4, lwd = 0, at = x2,
-                 labels = format(y_, big.mark = big.mark))
-    }
+        x2 <- axTicks(2)
+        if (length(y.labels.at.add))
+            x2 <- unique(sort(c(y.labels.at.add, x2)))
 
-    if (y.grid) {
-        if (xpd.hlines)
-            par(xpd = TRUE)
-        abline(h = x2, lwd = 0.25, col = y.grid.col)
-        if (xpd.hlines)
-            par(xpd = FALSE)
-    }
+        if (length(y.labels.at.remove))
+            x2 <- setdiff(x2, y.labels.at.remove)
 
-    ## x1 <- seq(as.Date("1871-1-1"),
-    ##           as.Date("2020-1-1"), by = "1 years")
-
-    if (time.axis)
-        if (is.null(time.labels.at))
-            xx <- axis.Date(1, lwd = 0, x = t)
-        else {
-            if (is.null(time.labels.format))
-                axis.Date(1, lwd = 0, at = time.labels.at)
-            else
-                axis.Date(1, lwd = 0,
-                          at = time.labels.at,
-                          format = time.labels.format,
-                          labels = time.labels)
+        if (y.axis) {
+            y_ <- x2
+            if (series.type == "streaks")
+                y_ <- y_ - 100
+            if (y.axis.pos %in% c("left", "both"))
+                axis(2, lwd = 0, at = x2,
+                     labels = format(y_, big.mark = big.mark))
+            if (y.axis.pos %in% c("right", "both"))
+                axis(4, lwd = 0, at = x2,
+                     labels = format(y_, big.mark = big.mark))
         }
-    else
-        xx <- axis.Date(1, lwd = 0, x = t, labels = FALSE)
 
-    if (time.grid) {
-        if (xpd.vlines)
-            par(xpd = TRUE)
-        if (is.null(time.grid.at))
-            abline(v = xx, lwd = 0.25, col = time.grid.col)
+        if (y.grid) {
+            if (xpd.hlines)
+                par(xpd = TRUE)
+            abline(h = x2, lwd = 0.25, col = y.grid.col)
+            if (xpd.hlines)
+                par(xpd = FALSE)
+        }
+
+        ## x1 <- seq(as.Date("1871-1-1"),
+        ##           as.Date("2020-1-1"), by = "1 years")
+
+        if (time.axis)
+            if (is.null(time.labels.at))
+                xx <- axis.Date(1, lwd = 0, x = t)
+            else {
+                if (is.null(time.labels.format))
+                    axis.Date(1, lwd = 0, at = time.labels.at)
+                else
+                    axis.Date(1, lwd = 0,
+                              at = time.labels.at,
+                              format = time.labels.format,
+                              labels = time.labels)
+            }
         else
-            abline(v = time.grid.at, lwd = 0.25, col = time.grid.col)
-        if (xpd.vlines)
-            par(xpd = FALSE)
-    }
+            xx <- axis.Date(1, lwd = 0, x = t, labels = FALSE)
 
-    if (!is.null(time.grid.at)) {
-        abline(v = time.grid.at, lwd = 0.25, col = grey(0.8))
-    } else if (add.yearly.grid) {
-        x1 <- seq(first_of_year(head(t, 1)),
-                  first_of_year(tail(t, 1)), by = "1 year")
-        abline(v = x1, lwd = 0.25, col = grey(0.8))
+        if (time.grid) {
+            if (xpd.vlines)
+                par(xpd = TRUE)
+            if (is.null(time.grid.at))
+                abline(v = xx, lwd = 0.25, col = time.grid.col)
+            else
+                abline(v = time.grid.at, lwd = 0.25, col = time.grid.col)
+            if (xpd.vlines)
+                par(xpd = FALSE)
+        }
+
+        if (!is.null(time.grid.at)) {
+            abline(v = time.grid.at, lwd = 0.25, col = grey(0.8))
+        } else if (add.yearly.grid) {
+            x1 <- seq(first_of_year(head(t, 1)),
+                      first_of_year(tail(t, 1)), by = "1 year")
+            abline(v = x1, lwd = 0.25, col = grey(0.8))
+        }
     }
 
     if (series.type == "level") {
@@ -283,7 +308,9 @@ function(series,
                 lines(t, series[, i], col = col[i], ...)
             }
     } else if (series.type == "streaks") {
-        .streaks(series[, 1], t = t, streaks = up_down, ...)
+        .streaks(series[, 1], t = t, streaks = up_down,
+                 col = col[1L], y = bm,
+                 labels.show = labels.show, ...)
     }
 
     if (!isFALSE(labels)) {
@@ -396,22 +423,35 @@ function(series,
     invisible(NULL)
 }
 
-.streaks <- function(x,
-                     t,
-                     streaks,
-                     ...) {
-
-
-    ## x <- axis.Date(1, index(dax), lwd = 0)
-    ## abline(v = x, col = grey(0.7), lwd = 0.25)
-
-    ## axis(2, lwd = 0, at = axTicks(2), labels = axTicks(2)-100)
-    ## abline(h = 100, lwd = 0.5, col = grey(.5))
-    ## abline(h = axTicks(2), col = grey(0.7), lwd = 0.25)
+.streaks <-
+function(x,
+         t,
+         streaks,
+         col,
+         y,
+         labels.show,
+         ...) {
 
     for (i in seq_len(nrow(streaks))) {
         tt <- seq(streaks$start[i], streaks$end[i])
-        lines(t[tt], scale1(x[tt], level = 100))
+
+        ## if (unclass(t[streaks$end[i]] - t[streaks$start[i]]) > 700)
+        ##     abline(v = c(t[streaks$start[i]],
+        ##                  t[streaks$end[i]]), lty = 3,
+        ##            lwd = 0.25)
+
+        v <- 100*scale1(x[tt]) / if (is.null(y)) 1 else scale1(y[tt])
+        lines(t[tt], v, col = col)
+        if (labels.show) {
+            par(xpd=TRUE)
+            if (streaks$return[i] > 0)
+                text(max(t[tt]), tail(v,1)*1.2, .fmt_r(streaks$return[i]), srt = 90,
+                     cex = 0.65)
+            else
+                text(max(t[tt]), tail(v,1)*0.85, .fmt_r(streaks$return[i]), srt = 90,
+                     cex = 0.65)
+            par(xpd=FALSE)
+        }
     }
 
 }
