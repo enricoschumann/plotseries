@@ -1,5 +1,5 @@
 ## -*- truncate-lines: t; -*-
-## Copyright (C) 2019  Enrico Schumann
+## Copyright (C) 2019-20  Enrico Schumann
 
 plotseries <- function(series, ...) {
     UseMethod("plotseries")
