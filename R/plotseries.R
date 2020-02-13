@@ -103,6 +103,12 @@ function(series,
          streaks.up = 0.2,
          streaks.down = -streaks.up,
          streaks.vlines = FALSE,
+         streaks.up.labels.y.mult = 1.1,
+         streaks.up.labels.pos = NULL,
+         streaks.up.labels.srt = 90,
+         streaks.down.labels.y.mult = 0.9,
+         streaks.down.labels.pos = NULL,
+         streaks.down.labels.srt = 90,
          ...
 
 
@@ -304,13 +310,22 @@ function(series,
         if (NCOL(series) > 1)
             for (i in 2:ncol(series)) {
                 if (white.underlay)
-                    lines(t, series[, i], col = "white", lwd = 2*lwd, ...)
+                    lines(t, series[, i],
+                          col = "white",
+                          lwd = white.underlay.width, ...)
                 lines(t, series[, i], col = col[i], ...)
             }
     } else if (series.type == "streaks") {
         .streaks(series[, 1], t = t, streaks = up_down,
                  col = col[1L], y = bm,
-                 labels.show = labels.show, ...)
+                 labels.show = labels.show,
+                 streaks.up.labels.y.mult   = streaks.up.labels.y.mult,
+                 streaks.up.labels.pos    = streaks.up.labels.pos,
+                 streaks.up.labels.srt    = streaks.up.labels.srt,
+                 streaks.down.labels.y.mult = streaks.down.labels.y.mult,
+                 streaks.down.labels.pos  = streaks.down.labels.pos,
+                 streaks.down.labels.srt  = streaks.down.labels.srt,                 
+                 ...)
     }
 
     if (!isFALSE(labels)) {
@@ -430,6 +445,12 @@ function(x,
          col,
          y,
          labels.show,
+         streaks.up.labels.y.mult,
+         streaks.up.labels.pos,
+         streaks.up.labels.srt,
+         streaks.down.labels.y.mult,
+         streaks.down.labels.pos,
+         streaks.down.labels.srt,
          ...) {
 
     for (i in seq_len(nrow(streaks))) {
@@ -439,17 +460,26 @@ function(x,
         ##     abline(v = c(t[streaks$start[i]],
         ##                  t[streaks$end[i]]), lty = 3,
         ##            lwd = 0.25)
-
+        ## labels.up.mult <- 1.1
+        ## labels.down.mult <- 0.9
         v <- 100*scale1(x[tt]) / if (is.null(y)) 1 else scale1(y[tt])
         lines(t[tt], v, col = col)
         if (labels.show) {
             par(xpd=TRUE)
             if (streaks$return[i] > 0)
-                text(max(t[tt]), tail(v,1)*1.2, .fmt_r(streaks$return[i]), srt = 90,
-                     cex = 0.65)
+                text(max(t[tt]),
+                     tail(v,1)*streaks.up.labels.y.mult,
+                     .fmt_r(streaks$return[i]),
+                     srt = streaks.up.labels.srt,
+                     pos = streaks.up.labels.pos,
+                     cex = 0.6)
             else
-                text(max(t[tt]), tail(v,1)*0.85, .fmt_r(streaks$return[i]), srt = 90,
-                     cex = 0.65)
+                text(max(t[tt]),
+                     tail(v,1)*streaks.down.labels.y.mult,
+                     .fmt_r(streaks$return[i]),
+                     srt = streaks.down.labels.srt,
+                     pos = streaks.down.labels.pos,
+                     cex = 0.6)
             par(xpd=FALSE)
         }
     }
