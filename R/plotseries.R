@@ -261,7 +261,10 @@ function(series,
         if (y.grid) {
             if (xpd.hlines)
                 par(xpd = TRUE)
-            abline(h = x2, lwd = 0.25, col = y.grid.col)
+            if (is.null(y.grid.at))
+                abline(h = x2, lwd = 0.25, col = y.grid.col)
+            else
+                abline(h = y.grid.at, lwd = 0.25, col = y.grid.col)
             if (xpd.hlines)
                 par(xpd = FALSE)
         }
@@ -324,7 +327,7 @@ function(series,
                  streaks.up.labels.srt    = streaks.up.labels.srt,
                  streaks.down.labels.y.mult = streaks.down.labels.y.mult,
                  streaks.down.labels.pos  = streaks.down.labels.pos,
-                 streaks.down.labels.srt  = streaks.down.labels.srt,                 
+                 streaks.down.labels.srt  = streaks.down.labels.srt,
                  ...)
     }
 

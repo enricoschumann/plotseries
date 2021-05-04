@@ -1,3 +1,8 @@
+2021-05-04  Enrico Schumann  <es@enricoschumann.net>
+
+	* R/plotseries.R (plotseries): support argument
+	'y.grid.at'
+
 2020-02-13  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries): add arguments
