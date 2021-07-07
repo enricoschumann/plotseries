@@ -1,5 +1,5 @@
 ## -*- truncate-lines: t; -*-
-## Copyright (C) 2019-20  Enrico Schumann
+## Copyright (C) 2019-21  Enrico Schumann
 
 plotseries <- function(series, ...) {
     UseMethod("plotseries")
@@ -99,7 +99,7 @@ function(series,
          series.type = "level",
          lines = FALSE,
 
-         fan.probs = NULL,
+         probs = NULL,
          streaks.up = 0.2,
          streaks.down = -streaks.up,
          streaks.vlines = FALSE,
@@ -199,12 +199,38 @@ function(series,
         .fan(series,
              t = t,
              n.levels = 5,
-             probs = fan.probs,
+             probs = probs,
              lines = FALSE,
              log.scale = log.scale,
              ## initial.value = 1,
              median.show = TRUE,
              ...)
+
+    } else if (series.type == "quantile") {
+
+        if (is.null(ylim))
+            ylim <- range(series, na.rm = TRUE)
+
+        if (!lines)
+            plot(t,
+                 rep(100, length(t)),
+                 ylim = ylim,
+                 xlab = "",
+                 ylab = "",
+                 lty = 0,
+                 type = "n",
+                 log = if (log.scale) "y" else "",
+                 xaxt = "n",
+                 yaxt = "n")
+
+        .quantile(series,
+                  t = t,
+                  probs = probs,
+                  lines = FALSE,
+                  log.scale = log.scale,
+                  ## initial.value = 1,
+                  median.show = TRUE,
+                  ...)
 
     } else if (series.type == "streaks") {
 
@@ -411,12 +437,9 @@ function(series,
 .fan <- function(P, t, n.levels = 5,
                  probs = NULL,
                  log.scale = FALSE,
-                 ## initial.value = 100,
                  median.show = TRUE,
                  ...) {
 
-    ## if (is.finite(initial.value))
-    ##     P <- scale1(P, level = initial.value)
     if (is.null(dim) || ncol(P) == 1L)
         warning("a single series makes a slim fan")
     nt <- nrow(P)
@@ -435,6 +458,38 @@ function(series,
         col <- grey(greys[level == levels])
         polygon(c(t, rev(t)), c(l, rev(u)),
                 col = col, border = NA)
+    }
+    if (median.show)
+        lines(t, apply(P, 1, median))
+    invisible(NULL)
+}
+
+.quantile <- function(P, t,
+                      probs = NULL,
+                      log.scale = FALSE,
+                      median.show = TRUE,
+                      ...) {
+
+    ## if (is.finite(initial.value))
+    ##     P <- scale1(P, level = initial.value)
+    if (is.null(dim) || ncol(P) == 1L)
+        warning("a single series makes a slim fan")
+    nt <- nrow(P)
+    if (!is.null(probs)) {
+        levels <- probs
+    } else {
+        levels <- 0.1
+    }
+    greys  <- seq(0.7,  0.50, length.out = length(levels))
+
+    args <- list(...)
+
+    for (level in levels) {
+        l <- apply(P, 1, quantile, level)
+        u <- apply(P, 1, quantile, 1 - level)
+        col <- grey(greys[level == levels])
+        lines(t, l)
+        lines(t, u)
     }
     if (median.show)
         lines(t, apply(P, 1, median))

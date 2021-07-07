@@ -1,7 +1,13 @@
+2021-07-06  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries): new series.type "quantile"
+        (plotseries): rename argument 'fan.probs' to 'probs', as
+        it is also used for series.type "quantile"
+
 2021-05-04  Enrico Schumann  <es@enricoschumann.net>
 
-	* R/plotseries.R (plotseries): support argument
-	'y.grid.at'
+        * R/plotseries.R (plotseries): support argument
+        'y.grid.at'
 
 2020-02-13  Enrico Schumann  <es@enricoschumann.net>
 
