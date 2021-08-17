@@ -109,6 +109,9 @@ function(series,
          streaks.down.labels.y.mult = 0.9,
          streaks.down.labels.pos = NULL,
          streaks.down.labels.srt = 90,
+
+         median.show = TRUE,
+         median.col = grey(.4),
          ...
 
 
@@ -203,7 +206,7 @@ function(series,
              lines = FALSE,
              log.scale = log.scale,
              ## initial.value = 1,
-             median.show = TRUE,
+             median.show = median.show,
              ...)
 
     } else if (series.type == "quantile") {
@@ -229,7 +232,7 @@ function(series,
                   lines = FALSE,
                   log.scale = log.scale,
                   ## initial.value = 1,
-                  median.show = TRUE,
+                  median.show = median.show,
                   ...)
 
     } else if (series.type == "streaks") {
@@ -460,7 +463,7 @@ function(series,
                 col = col, border = NA)
     }
     if (median.show)
-        lines(t, apply(P, 1, median))
+        lines(t, apply(P, 1, median), col = median.col)
     invisible(NULL)
 }
 
@@ -488,11 +491,11 @@ function(series,
         l <- apply(P, 1, quantile, level)
         u <- apply(P, 1, quantile, 1 - level)
         col <- grey(greys[level == levels])
-        lines(t, l)
-        lines(t, u)
+        lines(t, l, col = col)
+        lines(t, u, col = col)
     }
     if (median.show)
-        lines(t, apply(P, 1, median))
+        lines(t, apply(P, 1, median), col = median.col)
     invisible(NULL)
 }
 

@@ -1,3 +1,9 @@
+2021-08-17  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries.default): add arguments
+        'median.show' and 'median.col', which have an effect
+        for fan and quantile plots
+
 2021-07-06  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries): new series.type "quantile"
