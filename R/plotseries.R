@@ -233,6 +233,7 @@ function(series,
                   log.scale = log.scale,
                   ## initial.value = 1,
                   median.show = median.show,
+                  median.col = median.col,
                   ...)
 
     } else if (series.type == "streaks") {
@@ -385,7 +386,7 @@ function(series,
                           round(tail(series, 1)))
 
 
-        if (series.type == "level") {
+        if (series.type %in% c("level", "quantile")) {
             if (is.null(labels.at)) {
                 y.temp <- na.locf(series)
                 y <- tail(y.temp, 1)
@@ -441,6 +442,7 @@ function(series,
                  probs = NULL,
                  log.scale = FALSE,
                  median.show = TRUE,
+                 median.col = grey(.4),
                  ...) {
 
     if (is.null(dim) || ncol(P) == 1L)
@@ -471,6 +473,7 @@ function(series,
                       probs = NULL,
                       log.scale = FALSE,
                       median.show = TRUE,
+                      median.col = grey(.4),
                       ...) {
 
     ## if (is.finite(initial.value))
