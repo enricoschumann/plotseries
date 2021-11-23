@@ -123,8 +123,6 @@ function(series,
          y.labels.at.remove <- numeric(0)
     }
 
-
-
     par.lst <- list(las = 1,
                     bty = "n",
                     mar = c(1.25, 4, 1.25, 4.5),
@@ -339,7 +337,7 @@ function(series,
     }
 
     if (series.type == "level") {
-        lines(t, series[, 1],  col = col[1L], lwd = lwd, ...)
+        lines(t, series[, 1L],  col = col[1L], lwd = lwd, ...)
 
         if (NCOL(series) > 1)
             for (i in 2:ncol(series)) {
@@ -347,7 +345,8 @@ function(series,
                     lines(t, series[, i],
                           col = "white",
                           lwd = white.underlay.width, ...)
-                lines(t, series[, i], col = col[i], ...)
+                lines(t, series[, i], col = col[i],
+                      lwd = if (length(lwd) > 1L) lwd[i] else lwd, ...)
             }
     } else if (series.type == "streaks") {
         .streaks(series[, 1], t = t, streaks = up_down,
@@ -575,10 +574,10 @@ function(x,
         return(y.original)
 
     nb <- neighbours::neighbourfun(type = "numeric",
-                   stepsize = 0.01,
-                   n = length(y),
-                   min = rep(-5, length(y)),
-                   max =  rep(5, length(y)))
+                                   stepsize = 0.01,
+                                   n = length(y),
+                                   min = rep(y.min - y.range*0.1, length(y)),
+                                   max = rep(y.min + y.range*1.1, length(y)))
 
     sol <- NMOF::LSopt(.overlap,
                        list(x0 = y0,
