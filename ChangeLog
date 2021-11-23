@@ -1,3 +1,9 @@
+2021-11-23  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries.default): add
+        argument "do.scale1", with default to TRUE, for
+        optionally switching off scaling
+
 2021-08-17  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries.default): add arguments

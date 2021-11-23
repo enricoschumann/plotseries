@@ -98,6 +98,7 @@ function(series,
 
          series.type = "level",
          lines = FALSE,
+         do.scale1 = series.type != "streaks",
 
          probs = NULL,
          streaks.up = 0.2,
@@ -144,7 +145,7 @@ function(series,
         bm <- coredata(bm)
         R.bm <- returns(bm, t = t, period = returns.period)
         R <- R - R.bm
-        if (series.type != "streaks")
+        if (do.scale1)
             series <- scale1(series/bm)
         if (bm.returns)
             series <- 100*(series - 1)
