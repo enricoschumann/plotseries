@@ -43,6 +43,7 @@ function(series,
          ylim = NULL,
 
          lwd = 1,
+         type = "l",
 
          main = "",
          main.cex = 0.7,
@@ -170,7 +171,7 @@ function(series,
         if (!lines)
             plot(t,
                  series[, 1L],
-                 type = "l",
+                 type = type,
                  main = "",
                  xlab = "",
                  col = if (white.underlay) "white" else col[1L],
