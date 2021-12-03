@@ -35,7 +35,7 @@ function(series,
          dollars.currency = "USD",
 
          last.show = FALSE,
-
+         last.format = NULL,
 
 
 
@@ -136,6 +136,11 @@ function(series,
 
 
     ylab <- paste(ylab, collapse = "")
+
+
+    if (is.null(last.format))
+        last.format <-
+            function(x, ...) round(x, 1)
 
     if (missing(col))
         col <- rep(grey(0.4), NCOL(series))
@@ -365,6 +370,11 @@ function(series,
     if (!isFALSE(labels)) {
         if (length(labels) == 1L && (is.na(labels) || labels == ""))
             labels <- rep(labels, NCOL(series))
+
+        if (length(labels) > NCOL(series)) {
+            warning("some labels are dropped (more labels than series)")
+            labels <- labels[1:NCOL(series)]
+        }
         do.show <- !is.na(labels)
         lab <- labels
         lab[is.na(lab)] <- ""
@@ -374,7 +384,7 @@ function(series,
                           .fmt_r(R), "%")
         if (last.show)
             lab <- paste0(lab, colon,
-                          paste0(round(coredata(tail(series, 1)), 1)))
+                          paste0(last.format(coredata(tail(series, 1)))))
         ## if (!is.null(lab.fun)) {
         ##     if (NCOL(series) == 1)
         ##         lab <- paste0(lab, colon, lab.fun(series))

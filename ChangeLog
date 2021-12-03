@@ -1,15 +1,23 @@
+2021-11-26  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries): add
+        argument 'last.format', which is either NULL or
+        a function to be called on the 'last' part of
+        the label
+
 2021-11-25  Enrico Schumann  <es@enricoschumann.net>
 
-	* R/plotseries.R (.fmt_r): add argument "type"
+        * R/plotseries.R (plotseries): add
+        argument 'type'
 
 2021-11-23  Enrico Schumann  <es@enricoschumann.net>
 
-        * R/plotseries.R (plotseries.default): add
-        argument "do.scale1", with default to TRUE, for
-        optionally switching off scaling
+        * R/plotseries.R (plotseries): add argument
+	'do.scale1', with default to TRUE, for
+	optionally switching off scaling
 
-        * R/plotseries.R (plotseries.default): support
-        "lwd" with length > 1
+        * R/plotseries.R (plotseries): support 'lwd'
+	with length > 1
 
 2021-08-17  Enrico Schumann  <es@enricoschumann.net>
 
@@ -20,8 +28,9 @@
 2021-07-06  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries): new series.type "quantile"
-        (plotseries): rename argument 'fan.probs' to 'probs', as
-        it is also used for series.type "quantile"
+        (plotseries): rename argument 'fan.probs' to
+	'probs', as it is also used for series.type
+	"quantile"
 
 2021-05-04  Enrico Schumann  <es@enricoschumann.net>
 
