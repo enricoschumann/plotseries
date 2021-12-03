@@ -1,3 +1,8 @@
+2021-12-03  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries): add argument
+        'labels.at.offset'
+
 2021-11-26  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries): add
@@ -13,11 +18,11 @@
 2021-11-23  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries): add argument
-	'do.scale1', with default to TRUE, for
-	optionally switching off scaling
+        'do.scale1', with default to TRUE, for
+        optionally switching off scaling
 
         * R/plotseries.R (plotseries): support 'lwd'
-	with length > 1
+        with length > 1
 
 2021-08-17  Enrico Schumann  <es@enricoschumann.net>
 
@@ -29,8 +34,8 @@
 
         * R/plotseries.R (plotseries): new series.type "quantile"
         (plotseries): rename argument 'fan.probs' to
-	'probs', as it is also used for series.type
-	"quantile"
+        'probs', as it is also used for series.type
+        "quantile"
 
 2021-05-04  Enrico Schumann  <es@enricoschumann.net>
 

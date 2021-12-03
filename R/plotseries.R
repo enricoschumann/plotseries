@@ -25,6 +25,7 @@ function(series,
          labels.pos = 4,
          labels.col = NULL,
          labels.at = NULL,
+         labels.at.offset = NULL,
          labels.min.height = 0.05,
 
          returns.show = TRUE,
@@ -409,6 +410,9 @@ function(series,
                     y.min = labels.min.height,
                     y.range = diff(par("usr")[3:4]),
                     log.scale = log.scale)
+            }
+            if (!is.null(labels.at.offset)) {
+                y <- y + labels.at.offset
             }
             if (any(is.na(y[do.show]))) {
                 warning("NA in series: series/labels may be missing")
