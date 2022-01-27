@@ -145,6 +145,11 @@ function(series,
 
     if (missing(col))
         col <- rep(grey(0.4), NCOL(series))
+
+
+    if (numeric.t <- inherits(try(as.Date(t[1]), silent = TRUE), "try-error")) {
+        returns.period <- "total"
+    }
     R <- returns(series, t = t, period = returns.period)
     if (!is.null(bm)) {
         bm <- coredata(bm)
@@ -308,9 +313,12 @@ function(series,
         ## x1 <- seq(as.Date("1871-1-1"),
         ##           as.Date("2020-1-1"), by = "1 years")
 
-        if (time.axis)
+        if (time.axis) {
             if (is.null(time.labels.at))
-                xx <- axis.Date(1, lwd = 0, x = t)
+                if (numeric.t)
+                    xx <- axis(1, lwd = 0)
+                else
+                    xx <- axis.Date(1, lwd = 0, x = t)
             else {
                 if (is.null(time.labels.format))
                     axis.Date(1, lwd = 0, at = time.labels.at)
@@ -320,9 +328,13 @@ function(series,
                               format = time.labels.format,
                               labels = time.labels)
             }
-        else
-            xx <- axis.Date(1, lwd = 0, x = t, labels = FALSE)
+        } else {
+            if (numeric.t)
+                xx <- axis(1, lwd = 0, labels = FALSE)
+            else
+                xx <- axis(1, lwd = 0, x = t, labels = FALSE)
 
+        }
         if (time.grid) {
             if (xpd.vlines)
                 par(xpd = TRUE)

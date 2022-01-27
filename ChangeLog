@@ -1,3 +1,8 @@
+2022-01-27  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (last.format): add rudimentary
+        support for numeric t, such as  integers 1, 2, ...
+
 2021-12-03  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries): add argument
