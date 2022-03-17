@@ -1,5 +1,5 @@
 ## -*- truncate-lines: t; -*-
-## Copyright (C) 2019-21  Enrico Schumann
+## Copyright (C) 2019-22  Enrico Schumann
 
 plotseries <- function(series, ...) {
     UseMethod("plotseries")
@@ -109,9 +109,11 @@ function(series,
          streaks.up.labels.y.mult = 1.1,
          streaks.up.labels.pos = NULL,
          streaks.up.labels.srt = 90,
+         streaks.up.labels.col = NULL,
          streaks.down.labels.y.mult = 0.9,
          streaks.down.labels.pos = NULL,
          streaks.down.labels.srt = 90,
+         streaks.down.labels.col = NULL,
 
          median.show = TRUE,
          median.col = grey(.4),
@@ -374,9 +376,11 @@ function(series,
                  streaks.up.labels.y.mult   = streaks.up.labels.y.mult,
                  streaks.up.labels.pos    = streaks.up.labels.pos,
                  streaks.up.labels.srt    = streaks.up.labels.srt,
+                 streaks.up.labels.col    = streaks.up.labels.col,
                  streaks.down.labels.y.mult = streaks.down.labels.y.mult,
                  streaks.down.labels.pos  = streaks.down.labels.pos,
                  streaks.down.labels.srt  = streaks.down.labels.srt,
+                 streaks.down.labels.col  = streaks.down.labels.col,
                  ...)
     }
 
@@ -539,9 +543,11 @@ function(x,
          streaks.up.labels.y.mult,
          streaks.up.labels.pos,
          streaks.up.labels.srt,
+         streaks.up.labels.col,
          streaks.down.labels.y.mult,
          streaks.down.labels.pos,
          streaks.down.labels.srt,
+         streaks.down.labels.col,
          ...) {
 
     for (i in seq_len(nrow(streaks))) {
@@ -556,13 +562,14 @@ function(x,
         v <- 100*scale1(x[tt]) / if (is.null(y)) 1 else scale1(y[tt])
         lines(t[tt], v, col = col)
         if (labels.show) {
-            par(xpd=TRUE)
+            par(xpd = TRUE)
             if (streaks$return[i] > 0)
                 text(max(t[tt]),
                      tail(v,1)*streaks.up.labels.y.mult,
                      .fmt_r(streaks$return[i]),
                      srt = streaks.up.labels.srt,
                      pos = streaks.up.labels.pos,
+                     col = streaks.up.labels.col,
                      cex = 0.6)
             else
                 text(max(t[tt]),
@@ -570,8 +577,9 @@ function(x,
                      .fmt_r(streaks$return[i]),
                      srt = streaks.down.labels.srt,
                      pos = streaks.down.labels.pos,
+                     col = streaks.down.labels.col,
                      cex = 0.6)
-            par(xpd=FALSE)
+            par(xpd = FALSE)
         }
     }
 

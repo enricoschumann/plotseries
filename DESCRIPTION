@@ -2,7 +2,7 @@ Package: plotseries
 Type: Package
 Title: Time-Series Plots
 Version: 0.2-0
-Date: 2022-01-27
+Date: 2022-03-17
 Maintainer: Enrico Schumann <es@enricoschumann.net>
 Authors@R: person("Enrico", "Schumann",
                   role  = c("aut", "cre"),

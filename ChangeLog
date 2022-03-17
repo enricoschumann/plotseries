@@ -1,3 +1,8 @@
+2022-03-17  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries): add arguments
+        'streaks.up.labels.col' and 'streaks.down.labels.col'
+
 2022-01-27  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (last.format): add rudimentary
