@@ -334,7 +334,7 @@ function(series,
             if (numeric.t)
                 xx <- axis(1, lwd = 0, labels = FALSE)
             else
-                xx <- axis(1, lwd = 0, x = t, labels = FALSE)
+                xx <- axis.Date(1, lwd = 0, x = t, labels = FALSE)
 
         }
         if (time.grid) {
