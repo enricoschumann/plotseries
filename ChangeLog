@@ -1,3 +1,9 @@
+2022-05-29  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries): add argument
+        'streaks.relative', with default TRUE, to
+        support argument 'relative' of PMwR::streaks
+
 2022-03-17  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries): add arguments

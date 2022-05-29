@@ -106,11 +106,12 @@ function(series,
          streaks.up = 0.2,
          streaks.down = -streaks.up,
          streaks.vlines = FALSE,
+         streaks.relative = TRUE,
          streaks.up.labels.y.mult = 1.1,
          streaks.up.labels.pos = NULL,
          streaks.up.labels.srt = 90,
          streaks.up.labels.col = NULL,
-         streaks.down.labels.y.mult = 0.9,
+         streaks.down.labels.y.mult = if (streaks.relative) 0.9 else 1.1,
          streaks.down.labels.pos = NULL,
          streaks.down.labels.srt = 90,
          streaks.down.labels.col = NULL,
@@ -255,9 +256,15 @@ function(series,
                            up = streaks.up,
                            down = streaks.down,
                            y = bm,
-                           return.arithmetic = FALSE)
-        if (is.null(ylim))
-            ylim <- range(100*up_down$return + 100)
+                           relative = streaks.relative)
+        if ("change" %in% colnames(up_down))
+            colnames(up_down)[colnames(up_down) == "change"] <- "return"
+        if (is.null(ylim)) {
+            if (streaks.relative)
+                ylim <- range(100*up_down$return + 100)
+            else
+                ylim <- range(100*up_down$return)
+            }
         if (!lines)
             plot(t,
                  rep(100, length(t)),
@@ -267,7 +274,7 @@ function(series,
                  lty = 0,
                  type = "n",
                  main = "",
-                 log = "y", ## if (is.null(bm)) "y" else "", ## relative: *no* log scale
+                 log = if (streaks.relative) "y" else "", ## if (is.null(bm)) "y" else "", ## relative: *no* log scale
                  xaxt = "n",
                  yaxt = "n")
 
@@ -291,7 +298,7 @@ function(series,
 
         if (y.axis) {
             y_ <- x2
-            if (series.type == "streaks")
+            if (series.type == "streaks" && streaks.relative)
                 y_ <- y_ - 100
             if (y.axis.pos %in% c("left", "both"))
                 axis(2, lwd = 0, at = x2,
@@ -373,7 +380,7 @@ function(series,
         .streaks(series[, 1], t = t, streaks = up_down,
                  col = col[1L], y = bm,
                  labels.show = labels.show,
-                 streaks.up.labels.y.mult   = streaks.up.labels.y.mult,
+                 streaks.up.labels.y.mult = streaks.up.labels.y.mult,
                  streaks.up.labels.pos    = streaks.up.labels.pos,
                  streaks.up.labels.srt    = streaks.up.labels.srt,
                  streaks.up.labels.col    = streaks.up.labels.col,
@@ -381,6 +388,7 @@ function(series,
                  streaks.down.labels.pos  = streaks.down.labels.pos,
                  streaks.down.labels.srt  = streaks.down.labels.srt,
                  streaks.down.labels.col  = streaks.down.labels.col,
+                 streaks.relative = streaks.relative,
                  ...)
     }
 
@@ -548,6 +556,7 @@ function(x,
          streaks.down.labels.pos,
          streaks.down.labels.srt,
          streaks.down.labels.col,
+         streaks.relative,
          ...) {
 
     for (i in seq_len(nrow(streaks))) {
@@ -559,7 +568,10 @@ function(x,
         ##            lwd = 0.25)
         ## labels.up.mult <- 1.1
         ## labels.down.mult <- 0.9
-        v <- 100*scale1(x[tt]) / if (is.null(y)) 1 else scale1(y[tt])
+        if (streaks.relative)
+            v <- 100*scale1(x[tt]) / if (is.null(y)) 1 else scale1(y[tt])
+        else
+            v <- 100*(x[tt] - x[tt][1])
         lines(t[tt], v, col = col)
         if (labels.show) {
             par(xpd = TRUE)
