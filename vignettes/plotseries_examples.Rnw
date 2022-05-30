@@ -45,6 +45,8 @@ if (!require("PMwR"))
     stop("package ", sQuote("PMwR"), " is required for this vignette")
 if (!require("NMOF"))
     stop("package ", sQuote("NMOF"), " is required for this vignette")
+if (!require("bundesbank"))
+    stop("package ", sQuote("NMOF"), " is required for this vignette")
 @
 
 \section*{Time-series plots}
@@ -53,7 +55,8 @@ Start with a classic time-series plot: We look at
 time-series of the Fama--French factors
 \citep{fama1992}.
 
-<<fig = TRUE, height = 3, width=6>>=
+<<fig = TRUE, height=3, width=6>>=
+library("NMOF")
 series <- French("~/Downloads/French/",
                  "F-F_Research_Data_Factors_daily_CSV.zip",
                  frequency = "daily",
@@ -66,7 +69,7 @@ plotseries(series,
 @
 
 Total return of the market.
-<<fig = TRUE, height = 3, width=6>>=
+<<fig = TRUE, height=3, width=6>>=
 market <- French("~/Downloads/French/",
                  "market",
                  frequency = "daily",
@@ -82,9 +85,9 @@ plotseries(market,
 For relative plots \citep{schumann2013b}, use the
 \texttt{bm} argument.
 
-TODO example
+% TODO example
 
-TODO explain returns calculation
+% TODO explain returns calculation
 
 
 
@@ -121,7 +124,7 @@ plotseries(series, as.Date(row.names(series)),
            log.scale = TRUE,
            labels = colnames(series),
            white.underlay = TRUE)
-@ 
+@
 
 Let us plot the the decile portfolio with the highest
 returns (the winners) against the decile portfolio with
@@ -132,11 +135,10 @@ plotseries(series[, 10], as.Date(row.names(series)),
            log.scale = TRUE,
            labels = colnames(series)[10],
            bm = series[, 1])
-@ 
+@
 Keep in mind that this is on a log scale: so the
 drawdown in the first quarter of 2009, for instance, is
 substantial.
-
 <<fig=TRUE, height=3, width=6>>=
 plotseries(series[, 10], as.Date(row.names(series)),
            col = hcl.colors(n = 30, palette = "Greens")[1],
@@ -144,8 +146,27 @@ plotseries(series[, 10], as.Date(row.names(series)),
            labels = colnames(series)[10],
            bm = series[, 1],
            series.type = "streaks")
-@ 
+@
 
+
+As a final example: For some time-series types, such as
+interest rates, it is more sensible and more common to
+look at differences, not relative changes.  As an
+example, we chart the 10-year yield of German
+government bonds, as published by the Bundesbank. We
+define a streak as a yield move of 100~basis points.
+The key setting is \texttt{FALSE} for
+\texttt{streaks.relative}.
+<<bundesbank, fig=TRUE, height=3, width=6>>=
+library("bundesbank")
+y <- getSeries("BBSIS.D.I.ZST.ZI.EUR.S1311.B.A604.R10XX.R.A.A._Z._Z.A",
+               start = "1997-01", return.class = "zoo",
+               dest.dir = "~/Downloads/bundesbank")
+plotseries(y,
+           series.type = "streaks",
+           streaks.relative = FALSE,
+           streaks.up = 1)
+@
 
 \section*{Fancharts}
 
