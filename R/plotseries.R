@@ -577,7 +577,7 @@ function(x,
             par(xpd = TRUE)
             if (streaks$return[i] > 0)
                 text(max(t[tt]),
-                     tail(v,1)*streaks.up.labels.y.mult,
+                     max(v)*streaks.up.labels.y.mult,
                      .fmt_r(streaks$return[i]),
                      srt = streaks.up.labels.srt,
                      pos = streaks.up.labels.pos,
@@ -585,7 +585,7 @@ function(x,
                      cex = 0.6)
             else
                 text(max(t[tt]),
-                     tail(v,1)*streaks.down.labels.y.mult,
+                     min(v)*streaks.down.labels.y.mult,
                      .fmt_r(streaks$return[i]),
                      srt = streaks.down.labels.srt,
                      pos = streaks.down.labels.pos,
