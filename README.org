@@ -25,7 +25,7 @@
 
 ** Examples: Fama-French factors
 
-#+BEGIN_SRC R :exports both :session *R* :eval query :results graphics :file ./fama-french3.png :width 600 :height 450
+#+BEGIN_SRC R :exports both :session *R-plotseries* :eval query :results graphics :file ./fama-french3.png :width 600 :height 450
   library("plotseries")
   library("NMOF")   ## provides function 'French'
   series <- French("~/Downloads/French/",
@@ -36,15 +36,14 @@
 	     t = as.Date(row.names(series)),
 	     col = hcl.colors(n = 12, palette = "Dark 2"),
 	     log.scale = TRUE,
+	     par.list = list(ps = 10),
 	     labels = c("Market\n(excess return)", "SMB", "HML", "RF"))
 #+END_SRC
-
 
 #+RESULTS:
 [[./fama-french3.png]]
 
-
-More examples are in the package vignette
+More examples are in the package vignette.
 
 ** News, feedback and discussion
 
@@ -54,6 +53,6 @@ More examples are in the package vignette
 #+BEGIN_SRC R :eval never :export code
   library("utils")
   bug.report("[plotseries] Unexpected behaviour in function XXX", 
-             maintainer("IButils"), package = "IButils")
+             maintainer("plotseries"), package = "plotseries")
 #+END_SRC
 
