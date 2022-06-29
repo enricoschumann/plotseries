@@ -28,16 +28,22 @@
 #+BEGIN_SRC R :exports both :session *R-plotseries* :eval query :results graphics :file ./fama-french3.png :width 600 :height 450
   library("plotseries")
   library("NMOF")   ## provides function 'French'
+
+  ## fetch data
   series <- French("~/Downloads/French/",
-                   "F-F_Research_Data_Factors_daily_CSV.zip",
-                   frequency = "daily",
-                   price.series = TRUE)
+		   "F-F_Research_Data_Factors_daily_CSV.zip",
+		   frequency = "daily",
+		   price.series = TRUE)
+
+  ## plot
   plotseries(series,
-             t = as.Date(row.names(series)),
-             col = hcl.colors(n = 12, palette = "Dark 2"),
-             log.scale = TRUE,
-             par.list = list(ps = 10),
-             labels = c("Market\n(excess return)", "SMB", "HML", "RF"))
+	     t = as.Date(row.names(series)),
+	     col = hcl.colors(n = 12, palette = "Dark 2"),
+	     log.scale = TRUE,
+	     par.list = list(ps = 10),
+	     labels = c("Market\n(excess return)",
+			"SMB", "HML", "RF"),
+	     labels.col = TRUE)
 #+END_SRC
 
 #+RESULTS:
