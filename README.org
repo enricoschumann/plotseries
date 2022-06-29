@@ -5,7 +5,7 @@
   plotseries(), that creates high-quality, informative, but
   uncluttered graphics.  Multiple series can be aggregated
   into fanplots, the code for which is based on chapter 15
-  of "Numerical Methods and Optimization in Finance", second
+  of "[[http://enricoschumann.net/NMOF.htm][Numerical Methods and Optimization in Finance]]", second
   edition, by M. Gilli, D. Maringer and E. Schumann (2019,
   ISBN:978-0128150658).  Also supported is plotting streaks,
   i.e. periods of uninterrupted up or down movement.
@@ -18,8 +18,8 @@
    To install the package from within an R session, type:
 #+BEGIN_SRC R :eval never :export code
   install.packages("plotseries",
-		   repos = c("http://enricoschumann.net/R",
-			     getOption("repos")))
+                   repos = c("http://enricoschumann.net/R",
+                             getOption("repos")))
 #+END_SRC
 
 
@@ -29,15 +29,15 @@
   library("plotseries")
   library("NMOF")   ## provides function 'French'
   series <- French("~/Downloads/French/",
-		   "F-F_Research_Data_Factors_daily_CSV.zip",
-		   frequency = "daily",
-		   price.series = TRUE)
+                   "F-F_Research_Data_Factors_daily_CSV.zip",
+                   frequency = "daily",
+                   price.series = TRUE)
   plotseries(series,
-	     t = as.Date(row.names(series)),
-	     col = hcl.colors(n = 12, palette = "Dark 2"),
-	     log.scale = TRUE,
-	     par.list = list(ps = 10),
-	     labels = c("Market\n(excess return)", "SMB", "HML", "RF"))
+             t = as.Date(row.names(series)),
+             col = hcl.colors(n = 12, palette = "Dark 2"),
+             log.scale = TRUE,
+             par.list = list(ps = 10),
+             labels = c("Market\n(excess return)", "SMB", "HML", "RF"))
 #+END_SRC
 
 #+RESULTS:
