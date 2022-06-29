@@ -1,5 +1,5 @@
 * plotseries -- Time-Series Plots
-
+>
   Plot financial time-series, such as a portfolio value or
   stock price.  The package provides a single function,
   plotseries(), that creates high-quality, informative, but
@@ -43,7 +43,7 @@
 #+RESULTS:
 [[./fama-french3.png]]
 
-More examples are in the package vignette.
+More examples are in the [[http://enricoschumann.net/R/packages/plotseries/doc/plotseries_examples.pdf][package vignette]].
 
 ** News, feedback and discussion
 
@@ -52,7 +52,7 @@ More examples are in the package vignette.
 
 #+BEGIN_SRC R :eval never :export code
   library("utils")
-  bug.report("[plotseries] Unexpected behaviour in function XXX", 
+  bug.report("[plotseries] Unexpected behaviour in function XXX",
              maintainer("plotseries"), package = "plotseries")
 #+END_SRC
 
