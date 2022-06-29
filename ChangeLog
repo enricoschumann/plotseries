@@ -1,3 +1,7 @@
+2022-06-29  Enrico Schumann  <es@enricoschumann.net>
+
+        * .Rbuildignore: add file, ignore README
+
 2022-05-29  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries): add argument
