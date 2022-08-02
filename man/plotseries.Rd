@@ -179,13 +179,15 @@ plotseries(series, ...)
   }
   \item{series.type}{
 
-    character
+    string: \sQuote{\code{level}} (the default),
+    \sQuote{\code{quantile}}, \sQuote{\code{fan}}, or
+    \sQuote{\code{streaks}}
 
   }
 }
 \details{
 
-  The function calls \code{\link{plot}}. Its is very
+  The function calls \code{\link{plot}}. It is very
   experimental; its argument list is not stable.
 
 
