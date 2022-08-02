@@ -473,7 +473,7 @@ function(series,
     if (!is.null(aggregate) && aggregate == "monthly")
         P <- aggregate(P, datetimeutils::end_of_month(index(P)),
                        tail, 1)
-    .fan.default(P, t= index(P), n.levels = n.levels, probs = probs,
+    .fan(P, t= index(P), n.levels = n.levels, probs = probs,
                  log.scale = log.scale, ...)
 }
 

@@ -14,32 +14,32 @@
 plotseries(series, ...)
 
 \method{plotseries}{default}(series, t,
-    col, log.scale = FALSE,
-    labels = NA, labels.show = TRUE, labels.cex = 0.75,
-    labels.pos = 4, labels.col = NULL,
-    labels.at = NULL, labels.min.height = 0.05,
-    returns.show = TRUE, returns.period = "ann",
-    dollars.show = FALSE, dollars.arrow = "\u2192", dollars.currency = "USD",
-    last.show = FALSE,
-    ylab = "", ylim = NULL, lwd = 1,
-    main = "", main.cex = 0.7, main.col = grey(0.5),
-    y.axis = TRUE, y.axis.pos = "left",
-    y.grid = TRUE, y.grid.at = NULL, y.grid.col = grey(0.8),
-    y.labels = TRUE, y.labels.at = NULL,
-    y.labels.at.add = 1, y.labels.at.remove = 0,
-    time.axis = TRUE, time.grid = TRUE,
-    time.grid.at = NULL, time.grid.col = grey(0.8),
-    time.labels = TRUE, time.labels.at = NULL,
-    time.labels.format = NULL,
-    mar = c(1.25, 4, 1.25, 4.5), mgp = c(2, 0.25, 0),
-    axis.cex = 1, axis.col = grey(0.5),
-    white.underlay = FALSE, white.underlay.width = 2,
-    font.family = "",
-    colon = ": ", percent = "\%", big.mark = "'",
-    bm = NULL,
-    xpd.hlines = FALSE, xpd.vlines = FALSE,
-    series.type = "level", lines = FALSE,
-    probs = NULL, streaks.up = 0.2, streaks.down = -0.2, \dots)
+           col, log.scale = FALSE,
+           labels = NA, labels.show = TRUE, 
+           labels.cex = 0.75, labels.pos = 4, labels.col = NULL, labels.at = NULL, 
+    labels.at.offset = NULL, labels.min.height = 0.05, returns.show = TRUE, 
+    returns.period = "ann", dollars.show = FALSE, dollars.arrow = "\u2192", 
+    dollars.currency = "USD", last.show = FALSE, last.format = NULL, 
+    ylab = "", ylim = NULL, lwd = 1, type = "l", main = "", main.cex = 0.7, 
+    main.col = grey(0.5), y.axis = TRUE, y.axis.pos = "left", 
+    y.grid = TRUE, y.grid.at = NULL, y.grid.col = grey(0.8), 
+    y.labels = TRUE, y.labels.at = NULL, y.labels.at.add = 1, 
+    y.labels.at.remove = 0, time.axis = TRUE, time.grid = TRUE, 
+    time.grid.at = NULL, time.grid.col = grey(0.8), time.labels = TRUE, 
+    time.labels.at = NULL, time.labels.format = NULL, add.yearly.grid = FALSE, 
+    par.list = list(), axis.cex = 1, axis.col = grey(0.5), white.underlay = FALSE, 
+    white.underlay.width = 2, font.family = "", colon = ": ", 
+    percent = "\%", big.mark = "'", bm = NULL, bm.returns = FALSE, 
+    xpd.hlines = FALSE, xpd.vlines = FALSE, series.type = "level", 
+    lines = FALSE, do.scale1 = series.type != "streaks", probs = NULL, 
+    streaks.up = 0.2, streaks.down = -streaks.up, streaks.vlines = FALSE, 
+    streaks.relative = TRUE, streaks.up.labels.y.mult = 1.1, 
+    streaks.up.labels.pos = NULL, streaks.up.labels.srt = 90, 
+    streaks.up.labels.col = NULL,
+    streaks.down.labels.y.mult = if (streaks.relative) 0.9 else 1.1, 
+    streaks.down.labels.pos = NULL, streaks.down.labels.srt = 90, 
+    streaks.down.labels.col = NULL, median.show = TRUE, median.col = grey(0.4), 
+    \dots)
 
 \method{plotseries}{zoo}(series, \dots)
 
@@ -48,29 +48,26 @@ plotseries(series, ...)
   \item{series}{
     a zoo series
   }
+  \item{t}{
+    timestamp, typically of class \code{\link{Date}}
+  }
   \item{col}{
     character: colors
   }
   \item{\dots}{
     other parameters
   }
+  \item{lines}{
+    logical: if \code{TRUE}, add to existing plot
+  }  
   \item{labels}{
     character
   }
-  \item{add.labels}{
+  \item{labels.show}{
 
     logical: a vector with as many elements as series has columms
 
   }
-  \item{add.returns}{
-    logical
-}
-  \item{add.dollars}{
-    logical
-}
-  \item{add.last}{
-    logical
-}
   \item{labels.cex}{
     numeric
 }
@@ -98,12 +95,6 @@ plotseries(series, ...)
   \item{main.col}{
     character
 }
-  \item{add0}{
-    logical
-}
-  \item{add1}{
-    logical
-}
   \item{y.axis}{
     logical
   }
@@ -125,15 +116,6 @@ plotseries(series, ...)
   \item{time.grid.at}{
     ..
 }
-  \item{add.yearly.grid}{
-    ..
-}
-  \item{mar}{
-    ..
-}
-  \item{cex.axis}{
-    numeric
-}
 \item{white.underlay}{
     logical
   }
@@ -144,10 +126,13 @@ plotseries(series, ...)
     logical
 }
   \item{dollars.arrow}{
-    character. A safe choice (because it is \acronym{ASCII} is \code{->}.
+    character. A safe choice (because it is \acronym{ASCII}) is \code{->}.
 }
   \item{currency}{
     character
+}
+  \item{par.list}{
+    a list with named elements, such as \code{list(las = 1, mar = c(3, 3, 3, 3))}
 }
   \item{percent}{
     character
@@ -157,9 +142,6 @@ plotseries(series, ...)
 }
   \item{bm}{
     a zoo series
-}
-  \item{show.returns}{
-    logical
 }
   \item{do.scale1}{
     logical
@@ -190,8 +172,23 @@ plotseries(series, ...)
   The function calls \code{\link{plot}}. It is very
   experimental; its argument list is not stable.
 
+  \subsection{Settings to be passed with \code{\link{par}}}{
 
+    \code{plotseries} applies the following default settings via
+    \code{\link{par}}:
+\preformatted{
+        par.lst <- list(las = 1,
+                    bty = "n",
+                    mar = c(1.25, 4, 1.25, 4.5),
+                    tck = 0.01,
+                    ps = 9.5,
+                    mgp = c(2, 0.25, 0),
+                    col.axis = grey(0.5))}
 
+  These parameters can be overwritten by specifying
+  \code{par.list}.
+
+}
 
 }
 \value{
