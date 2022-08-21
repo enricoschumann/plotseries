@@ -1,5 +1,5 @@
 * plotseries -- Time-Series Plots
->
+
   Plot financial time-series, such as a portfolio value or
   stock price.  The package provides a single function,
   plotseries(), that creates high-quality, informative, but
