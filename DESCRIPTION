@@ -2,17 +2,18 @@ Package: plotseries
 Type: Package
 Title: Time-Series Plots
 Version: 0.2-0
-Date: 2022-05-29
+Date: 2022-08-03
 Maintainer: Enrico Schumann <es@enricoschumann.net>
 Authors@R: person("Enrico", "Schumann",
                   role  = c("aut", "cre"),
                   email = "es@enricoschumann.net",
                   comment = c(ORCID = "0000-0001-7601-6576"))
-Description: Plot the time-series of a portfolio value or
-  stock price.  The aim is to provide high-quality,
+Description: Plot financial time-series, such as a portfolio
+  value or stock price.  The package provides a single
+  function, plotseries(), that creates high-quality,
   informative, but uncluttered graphics.  Multiple series
-  can be aggregated into fanplots, the code for which is
-  based on chapter 15 of "Numerical Methods and
+  can be aggregated into quantile and fan plots, the code
+  for which is based on chapter 15 of "Numerical Methods and
   Optimization in Finance", second edition, by M. Gilli,
   D. Maringer and E. Schumann (2019, ISBN:978-0128150658).
   Also supported is plotting streaks, i.e. periods of
@@ -21,5 +22,6 @@ Imports: PMwR, datetimeutils, grDevices, graphics,
          neighbours, utils, zoo
 Suggests: NMOF, bundesbank
 License: GPL-3
-URL: http://enricoschumann.net/R/packages/plotseries/,
+URL: http://enricoschumann.net/R/packages/plotseries/ ,
+     https://sr.ht/~enricoschumann/plotseries/ ,
      https://github.com/enricoschumann/plotseries

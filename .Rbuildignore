@@ -1,0 +1,10 @@
+.es_keywords
+.git
+.gitignore
+ChangeLog
+README.org
+THANKS
+dev
+dev/
+fama-french3.png
+x.RData

@@ -41,8 +41,6 @@ pv <- gsub("(.*)[.](.*)", "\\1-\\2", pv)
 
 <<echo=false>>=
 library("plotseries")
-if (!require("PMwR"))
-    stop("package ", sQuote("PMwR"), " is required for this vignette")
 if (!require("NMOF"))
     stop("package ", sQuote("NMOF"), " is required for this vignette")
 if (!require("bundesbank"))
@@ -69,7 +67,7 @@ plotseries(series,
 @
 
 Total return of the market.
-<<fig = TRUE, height=3, width=6>>=
+<<market, fig = TRUE, height=3, width=6>>=
 market <- French("~/Downloads/French/",
                  "market",
                  frequency = "daily",
@@ -79,14 +77,30 @@ plotseries(market,
            col = hcl.colors(n = 12, palette = "Dark 2"),
            log.scale = TRUE,
            dollars.show = TRUE,
+           dollars.arrow = " -> ",
            labels = c("Market\n(total return)"))
 @
 
 For relative plots \citep{schumann2013b}, use the
 \texttt{bm} argument.
 
-% TODO example
+<<momentum1, fig = TRUE, height=3, width=6>>=
+series <- French("~/Downloads/French/",
+                 "10_Portfolios_Prior_12_2_Daily_CSV.zip",
+                 frequency = "daily",
+                 price.series = TRUE)
+series <- series[rownames(series) > "1965-1-1", ]
 
+plotseries(series,
+           bm = market[rownames(market) > "1965-1-1", ],
+           t = as.Date(row.names(series)),
+           col = hcl.colors(n = ncol(series)+5,
+                            palette = "Dark Mint"),
+           log.scale = TRUE,
+           dollars.show = FALSE,
+           labels = paste("Momentum", c("low", 2:9, "high")),
+           labels.col = TRUE)
+@
 % TODO explain returns calculation
 
 
@@ -102,7 +116,7 @@ countermovement of \texttt{streaks.down}
 (down) movements.
 <<fig=TRUE, height=3, width=6>>=
 plotseries(market,
-           t = as.Date(row.names(series)),
+           t = as.Date(row.names(market)),
            series.type = "streaks")
 @
 The vertical axis always uses a log scale, so that a
@@ -113,6 +127,7 @@ of~100\%.
 Sometimes it is also useful to compute relative
 streaks.  Let us look at momentum.
 <<fig=TRUE, height=3, width=6>>=
+library("PMwR")   ## for scale1
 series <- French("~/Downloads/French/",
                  "10_Portfolios_Prior_12_2_Daily_CSV.zip",
                  frequency = "daily",
@@ -168,22 +183,28 @@ plotseries(y,
            streaks.up = 1)
 @
 
-\section*{Fancharts}
+\section*{Fan-plots and quantile-plots}
 
 Fanplots build on code of \citet[Chapter~15]{Gilli2019}.
 
-
 Suppose you wanted to plot many paths.
-<<fig = TRUE, height=3, width=6>>=
+<<gbm,fig = TRUE, height=2.5, width=6>>=
 x <- gbm(100, 20, r=0.01, 0.01^2,1, S0 = 100)
 t <- as.Date("2019-1-1") + seq_len(nrow(x))
 plotseries(x, t, col = rep(grey(.5), ncol(x)))
 @
 
-A fanplot of the same data.
+A fan-plot of the same data.
 
-<<fig = TRUE, height=3, width=6>>=
+<<fan,fig = TRUE, height=2.5, width=6>>=
 plotseries(x, t, series.type = "fan")
+@
+
+A quantile-plot plots only particular quantiles.
+
+<<quantile,fig = TRUE, height=2.5, width=6>>=
+plotseries(x, t, series.type = "quantile",
+           probs = c(0.1, 0.25, 0.5, 0.75, 0.9))
 @
 
 
