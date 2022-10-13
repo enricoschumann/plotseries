@@ -19,7 +19,7 @@ Description: Plot the time-series of a portfolio value or
   uninterrupted up or down movement.
 Imports: PMwR, datetimeutils, grDevices, graphics,
          neighbours, utils, zoo
-Suggests: NMOF
+Suggests: NMOF, bundesbank
 License: GPL-3
 URL: http://enricoschumann.net/R/packages/plotseries/,
      https://github.com/enricoschumann/plotseries
