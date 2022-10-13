@@ -1,3 +1,13 @@
+2022-10-13  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries.default): add parameters
+        'streaks.up.labels.cex' and 'streaks.down.labels.cex'
+
+2022-09-20  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries.default): check
+        whether "series.type" is supported
+
 2022-08-02  Enrico Schumann  <es@enricoschumann.net>
 
         * DESCRIPTION (Suggests): add 'bundesbank'

@@ -111,10 +111,12 @@ function(series,
          streaks.up.labels.pos = NULL,
          streaks.up.labels.srt = 90,
          streaks.up.labels.col = NULL,
+         streaks.up.labels.cex = 0.6,
          streaks.down.labels.y.mult = if (streaks.relative) 0.9 else 1.1,
          streaks.down.labels.pos = NULL,
          streaks.down.labels.srt = 90,
          streaks.down.labels.col = NULL,
+         streaks.down.labels.cex = streaks.up.labels.cex,
 
          median.show = TRUE,
          median.col = grey(.4),
@@ -122,6 +124,13 @@ function(series,
 
 
          ) {
+
+    .series.types <- c("level", "streaks",
+                       "fan", "quantile",
+                       "drawdown", "returns")
+    if (!series.type %in% .series.types) {
+        stop("unknown series.type")
+    }
 
     if (series.type == "streaks") {
          y.labels.at.add <- numeric(0)
@@ -384,10 +393,12 @@ function(series,
                  streaks.up.labels.pos    = streaks.up.labels.pos,
                  streaks.up.labels.srt    = streaks.up.labels.srt,
                  streaks.up.labels.col    = streaks.up.labels.col,
+                 streaks.up.labels.cex    = streaks.up.labels.cex,
                  streaks.down.labels.y.mult = streaks.down.labels.y.mult,
                  streaks.down.labels.pos  = streaks.down.labels.pos,
                  streaks.down.labels.srt  = streaks.down.labels.srt,
                  streaks.down.labels.col  = streaks.down.labels.col,
+                 streaks.down.labels.cex  = streaks.down.labels.cex,
                  streaks.relative = streaks.relative,
                  ...)
     }
@@ -552,10 +563,12 @@ function(x,
          streaks.up.labels.pos,
          streaks.up.labels.srt,
          streaks.up.labels.col,
+         streaks.up.labels.cex,
          streaks.down.labels.y.mult,
          streaks.down.labels.pos,
          streaks.down.labels.srt,
          streaks.down.labels.col,
+         streaks.down.labels.cex,
          streaks.relative,
          ...) {
 
@@ -582,7 +595,7 @@ function(x,
                      srt = streaks.up.labels.srt,
                      pos = streaks.up.labels.pos,
                      col = streaks.up.labels.col,
-                     cex = 0.6)
+                     cex = streaks.up.labels.cex)
             else
                 text(max(t[tt]),
                      min(v)*streaks.down.labels.y.mult,
@@ -590,7 +603,7 @@ function(x,
                      srt = streaks.down.labels.srt,
                      pos = streaks.down.labels.pos,
                      col = streaks.down.labels.col,
-                     cex = 0.6)
+                     cex = streaks.down.labels.cex)
             par(xpd = FALSE)
         }
     }
