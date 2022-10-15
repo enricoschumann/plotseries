@@ -2,7 +2,7 @@ Package: plotseries
 Type: Package
 Title: Time-Series Plots
 Version: 0.2-0
-Date: 2022-08-03
+Date: 2022-09-20
 Maintainer: Enrico Schumann <es@enricoschumann.net>
 Authors@R: person("Enrico", "Schumann",
                   role  = c("aut", "cre"),
@@ -23,5 +23,5 @@ Imports: PMwR, datetimeutils, grDevices, graphics,
 Suggests: NMOF, bundesbank
 License: GPL-3
 URL: http://enricoschumann.net/R/packages/plotseries/ ,
-     https://sr.ht/~enricoschumann/plotseries/ ,
+     https://git.sr.ht/~enricoschumann/plotseries/ ,
      https://github.com/enricoschumann/plotseries
