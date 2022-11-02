@@ -1,3 +1,8 @@
+2022-11-02  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries.default): pass
+        argument "type" on to "lines"
+
 2022-10-13  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries.default): add parameters

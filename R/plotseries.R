@@ -374,16 +374,20 @@ function(series,
     }
 
     if (series.type == "level") {
-        lines(t, series[, 1L],  col = col[1L], lwd = lwd, ...)
+        lines(t, series[, 1L],  col = col[1L], lwd = lwd,
+              type = type, ...)
 
         if (NCOL(series) > 1)
             for (i in 2:ncol(series)) {
                 if (white.underlay)
                     lines(t, series[, i],
                           col = "white",
+                          type = type,
                           lwd = white.underlay.width, ...)
                 lines(t, series[, i], col = col[i],
-                      lwd = if (length(lwd) > 1L) lwd[i] else lwd, ...)
+                      lwd = if (length(lwd) > 1L) lwd[i] else lwd,
+                      type = type,
+                      ...)
             }
     } else if (series.type == "streaks") {
         .streaks(series[, 1], t = t, streaks = up_down,
