@@ -158,8 +158,16 @@ function(series,
     if (missing(col))
         col <- rep(grey(0.4), NCOL(series))
 
+    numeric.t <- inherits(try(as.Date(t[1]), silent = TRUE), "try-error")
 
-    if (numeric.t <- inherits(try(as.Date(t[1]), silent = TRUE), "try-error")) {
+    ## handle yearmon/yearqtr
+    if (inherits(t, "yearmon")) {
+        time.labels.at <- t
+        time.labels <- format(t, "%m %Y")
+    }
+    
+
+    if (numeric.t) {
         returns.period <- "total"
     }
     R <- returns(series, t = t, period = returns.period)
@@ -333,18 +341,31 @@ function(series,
 
         if (time.axis) {
             if (is.null(time.labels.at))
+
+                ## 'time.labels.at' NOT defined
                 if (numeric.t)
                     xx <- axis(1, lwd = 0)
                 else
                     xx <- axis.Date(1, lwd = 0, x = t)
+
             else {
-                if (is.null(time.labels.format))
-                    axis.Date(1, lwd = 0, at = time.labels.at)
-                else
-                    axis.Date(1, lwd = 0,
-                              at = time.labels.at,
-                              format = time.labels.format,
-                              labels = time.labels)
+
+                ## 'time.labels.at' is defined
+                if (numeric.t) {
+                    xx <- axis(1,
+                               lwd = 0,
+                               at = time.labels.at,
+                               labels = time.labels)
+
+                } else {
+                    if (is.null(time.labels.format))
+                        axis.Date(1, lwd = 0, at = time.labels.at)
+                    else
+                        axis.Date(1, lwd = 0,
+                                  at = time.labels.at,
+                                  format = time.labels.format,
+                                  labels = time.labels)
+                    }
             }
         } else {
             if (numeric.t)

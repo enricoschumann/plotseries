@@ -1,5 +1,7 @@
 v0.2-0  (2022-12-XX; not yet released))
 
+  o support "zoo::yearmon" timestamps
+
   o ....
 
 v0.1-0  (2019-09-19)
