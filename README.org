@@ -31,19 +31,19 @@
 
   ## fetch data
   series <- French("~/Downloads/French/",
-		   "F-F_Research_Data_Factors_daily_CSV.zip",
-		   frequency = "daily",
-		   price.series = TRUE)
+                   "F-F_Research_Data_Factors_daily_CSV.zip",
+                   frequency = "daily",
+                   price.series = TRUE)
 
   ## plot
   plotseries(series,
-	     t = as.Date(row.names(series)),
-	     col = hcl.colors(n = 12, palette = "Dark 2"),
-	     log.scale = TRUE,
-	     par.list = list(ps = 10),
-	     labels = c("Market\n(excess return)",
-			"SMB", "HML", "RF"),
-	     labels.col = TRUE)
+             t = as.Date(row.names(series)),
+             col = hcl.colors(n = 12, palette = "Dark 2"),
+             log.scale = TRUE,
+             par.list = list(ps = 10),
+             labels = c("Market\n(excess return)",
+                        "SMB", "HML", "RF"),
+             labels.col = TRUE)
 #+END_SRC
 
 #+RESULTS:
