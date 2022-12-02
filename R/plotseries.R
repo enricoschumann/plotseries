@@ -679,8 +679,10 @@ function(x,
                             printDetail = TRUE,
                             nI = 500),
                        y0 = y0, h = h)
-    ans <- numeric(length(y))
-    ans[ii] <- sol$xbest
+
+    ans <- numeric(length(y.original))
+    miss <- length(ii) - length(sol$xbest)
+    ans[ii] <- c(sol$xbest, rep(NA, miss))
     if (log.scale)
         ans <- 10^ans
     ans
