@@ -2,6 +2,9 @@
 
         * R/plotseries.R (plotseries.default): compute
         returns only if required for labels
+        (.spread_labels): set trade-off overlap/distance to
+        best position to 2, i.e. overlap is twice as bad as
+        distance
 
 2022-11-23  Enrico Schumann  <es@enricoschumann.net>
 

@@ -473,7 +473,7 @@ function(series,
                 y <- .spread_labels(
                     y = drop(coredata(tail(series, 1))),
                     y.min = labels.min.height,
-                    y.range = diff(par("usr")[3:4]),
+                    y.range = par("usr")[3:4],
                     log.scale = log.scale)
             }
             if (!is.null(labels.at.offset)) {
@@ -644,12 +644,11 @@ function(x,
                            y.min, x.min = NULL,
                            y.range, x.range = NULL,
                            log.scale = FALSE) {
-
     y.original <- y
 
     if (log.scale)
         y <- log(y, 10)
-    h <- y.min*y.range/2
+    h <- y.min*diff(y.range)/2
 
     ii <- order(y, decreasing = TRUE)
     y <- sort(y, decreasing = TRUE)
@@ -657,21 +656,24 @@ function(x,
 
     .overlap <- function(y, y0, h) {
         yy <- y[-length(y)] - y[-1] - 2*h
-        sum(abs(y - y0)) - sum(yy - abs(yy))/2
+        sum(abs(y - y0))*0.5 - sum(yy - abs(yy))/2
     }
 
     if (.overlap(y, y0, h) == 0)
         return(y.original)
 
-    nb <- neighbours::neighbourfun(type = "numeric",
-                                   stepsize = 0.01,
-                                   n = length(y),
-                                   min = rep(y.min - y.range*0.1, length(y)),
-                                   max = rep(y.min + y.range*1.1, length(y)))
+    nb <- neighbours::neighbourfun(
+                          type = "numeric",
+                          stepsize = h/5,
+                          length = length(y),
+                          min = rep(y.range[1] - diff(y.range)*0.1, length(y)),
+                          max = rep(y.range[2] + diff(y.range)*0.1, length(y)))
 
     sol <- NMOF::LSopt(.overlap,
                        list(x0 = y0,
                             neighbour = nb,
+                            printBar = FALSE,
+                            printDetail = TRUE,
                             nI = 500),
                        y0 = y0, h = h)
     ans <- numeric(length(y))
