@@ -148,6 +148,10 @@ function(series,
     par.lst[names(par.list)] <- par.list
 
 
+    old.par <- par(no.readonly = TRUE)
+    on.exit(par(old.par), add = TRUE)
+
+
     ylab <- paste(ylab, collapse = "")
 
 
@@ -185,7 +189,6 @@ function(series,
         if (bm.returns)
             series <- 100*(series - 1)
     }
-
 
     if (is.character(time.grid.at) &&
         grep("year", time.grid.at, ignore.case = TRUE)) {
