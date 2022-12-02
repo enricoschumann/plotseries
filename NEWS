@@ -2,6 +2,9 @@ v0.2-0  (2022-12-06; not yet released))
 
   o support "zoo::yearmon" timestamps
 
+  o provide options to automatically place (and
+    displace) labels to avoid overlap
+
   o ....
 
 v0.1-0  (2019-09-19)
