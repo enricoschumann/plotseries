@@ -1,3 +1,8 @@
+2022-12-02  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries.default): compute
+        returns only if required for labels
+
 2022-11-23  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries.default):

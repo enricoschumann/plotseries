@@ -160,18 +160,23 @@ function(series,
 
     numeric.t <- inherits(try(as.Date(t[1]), silent = TRUE), "try-error")
 
+
     ## handle yearmon/yearqtr
     if (inherits(t, "yearmon")) {
         time.labels.at <- t
         time.labels <- format(t, "%m %Y")
     }
-    
 
-    if (numeric.t) {
+
+    ## compute returns, to be shown in labels
+    if (numeric.t)
         returns.period <- "total"
-    }
-    R <- returns(series, t = t, period = returns.period)
-    if (!is.null(bm)) {
+
+
+    if (returns.show)
+        R <- returns(series, t = t, period = returns.period)
+
+    if (!is.null(bm) && returns.show) {
         bm <- coredata(bm)
         R.bm <- returns(bm, t = t, period = returns.period)
         R <- R - R.bm
