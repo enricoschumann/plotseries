@@ -344,13 +344,13 @@ plotseries(series, ...)
     \code{plotseries} applies the following default settings via
     \code{\link{par}}:
 \preformatted{
-        par.lst <- list(las = 1,
-                    bty = "n",
-                    mar = c(1.25, 4, 1.25, 4.5),
-                    tck = 0.01,
-                    ps = 9.5,
-                    mgp = c(2, 0.25, 0),
-                    col.axis = grey(0.5))}
+        list(las = 1,
+             bty = "n",
+             mar = c(1.25, 4, 1.25, 4.5),
+             tck = 0.01,
+             ps = 9.5,
+             mgp = c(2, 0.25, 0),
+             col.axis = grey(0.5))}
 
   These parameters can be overwritten by specifying
   \code{par.list}.

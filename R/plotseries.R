@@ -148,7 +148,7 @@ function(series,
     par.lst[names(par.list)] <- par.list
 
 
-    old.par <- par(no.readonly = TRUE)
+    old.par <- par(par.lst)
     on.exit(par(old.par), add = TRUE)
 
 

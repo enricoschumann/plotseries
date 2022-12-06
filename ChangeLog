@@ -1,3 +1,9 @@
+2022-12-06  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries.default): reset
+        only those graphical parameters that plotseries
+        actually changes
+
 2022-12-02  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries.default): compute
