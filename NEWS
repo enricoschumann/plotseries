@@ -1,15 +1,22 @@
-v0.2-0  (2022-12-06; not yet released))
+v0.2-0  (2022-12-12; not yet released))
+
+  o plotseries now supports different types of plots,
+    controlled by argument 'series.type': "level" (the
+    default), "fan", "quantile", "streaks".
+    For examples, see the vignette, or this note:
+    http://enricoschumann.net/notes/streaks-in-equity-returns-and-yield-changes.html
 
   o the 'par' settings that plotseries changes
     internally are restored to previous values when the
     function ends
 
-  o support for "zoo::yearmon" timestamps
+  o support for "zoo::yearmon" timestamps, as well as
+    plain numeric timestamps (1, 2, 3, ...)
 
   o provide options to automatically place (and
     displace) labels to avoid overlap
 
-  o ....
+  o see the ChangeLog for more details
 
 v0.1-0  (2019-09-19)
 

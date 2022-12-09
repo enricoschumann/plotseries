@@ -49,11 +49,16 @@ if (!require("bundesbank"))
 
 \section*{Time-series plots}
 
-Start with a classic time-series plot: We look at
-time-series of the Fama--French factors
-\citep{fama1992}.
+Start with a classic time-series plot: the time-series
+of the Fama--French factors \citep{fama1992}.
+Package
+\href{https://cran.r-project.org/package=NMOF}{\textsc{NMOF}}
+provides a
+function
+\href{https://search.r-project.org/CRAN/refmans/NMOF/html/French.html}{\texttt{French}}
+to get the data.
 
-<<fig = TRUE, height=3, width=6>>=
+<<fig=TRUE, height=3, width=5.5>>=
 library("NMOF")
 series <- French("~/Downloads/French/",
                  "F-F_Research_Data_Factors_daily_CSV.zip",
@@ -63,7 +68,8 @@ plotseries(series,
            t = as.Date(row.names(series)),
            col = hcl.colors(n = 12, palette = "Dark 2"),
            log.scale = TRUE,
-           labels = c("Market\n(excess return)", "SMB", "HML", "RF"))
+           labels = c("Market\n(excess return)", "SMB", "HML", "RF"),
+           labels.col = TRUE)
 @
 
 Total return of the market.

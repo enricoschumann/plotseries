@@ -51,9 +51,12 @@ plotseries(series, ...)
            streaks.relative = TRUE, streaks.up.labels.y.mult = 1.1,
            streaks.up.labels.pos = NULL, streaks.up.labels.srt = 90,
            streaks.up.labels.col = NULL,
+           streaks.up.labels.cex = 0.6,
+           ##
            streaks.down.labels.y.mult = if (streaks.relative) 0.9 else 1.1,
            streaks.down.labels.pos = NULL, streaks.down.labels.srt = 90,
            streaks.down.labels.col = NULL,
+           streaks.down.labels.cex = streaks.up.labels.cex,
            ##
            median.show = TRUE, median.col = grey(0.4),
            \dots)
@@ -261,7 +264,7 @@ plotseries(series, ...)
   \item{streaks.relative}{
     logical
 }
-  \item{streaks.up.labels.y.mult}{
+  \item{streaks.up.labels.y.mult,streaks.down.labels.y.mult}{
     numeric
 }
   \item{streaks.up.labels.pos}{
@@ -272,13 +275,13 @@ plotseries(series, ...)
 }
   \item{streaks.up.labels.col}{
     a colour
-}
-  \item{streaks.down.labels.y.mult}{
-    numeric
-}
+  }
+  \item{streaks.up.labels.cex,streaks.down.labels.cex}{
+    relative character size for streaks labels; default is 0.6
+  }
   \item{streaks.down.labels.pos}{
     numeric
-}
+  }
   \item{streaks.down.labels.srt}{
     numeric
 }
