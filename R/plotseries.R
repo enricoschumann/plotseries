@@ -467,15 +467,16 @@ function(series,
                           round(tail(series, 1)))
 
 
-        if (series.type %in% c("level", "quantile")) {
+        if (series.type %in% c("level")) {
             if (is.null(labels.at)) {
                 y.temp <- na.locf(series)
                 y <- tail(y.temp, 1)
             } else if (is.numeric(labels.at)) {
                 y <- labels.at
             } else if (labels.at == "auto") {
+                y.temp <- na.locf(series)
                 y <- .spread_labels(
-                    y = drop(coredata(tail(series, 1))),
+                    y = drop(coredata(tail(y.temp, 1))),
                     y.min = labels.min.height,
                     y.range = par("usr")[3:4],
                     log.scale = log.scale)
@@ -499,10 +500,18 @@ function(series,
                 par(xpd = FALSE)
             }
 
-        } else if (series.type == "fan") {
+        } else if (series.type %in% c("quantile", "fan")) {
             lab <- paste("median ", .fmt_r(median(R)))  ## FIXME
             y.temp <- na.locf(series)
             y <- median(coredata(tail(y.temp, 1)))
+            par(xpd = TRUE)
+            text(max(t),
+                 y,
+                 lab,
+                 pos = labels.pos,
+                 cex = labels.cex,
+                 col = labels.col)
+            par(xpd = FALSE)
         }
 
     }
@@ -677,8 +686,8 @@ function(x,
                        list(x0 = y0,
                             neighbour = nb,
                             printBar = FALSE,
-                            printDetail = TRUE,
-                            nI = 500),
+                            printDetail = FALSE,
+                            nI = 1000),
                        y0 = y0, h = h)
 
     ans <- numeric(length(y.original))
