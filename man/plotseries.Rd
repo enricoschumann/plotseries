@@ -58,7 +58,7 @@ plotseries(series, ...)
            median.show = TRUE, median.col = grey(0.4),
            \dots)
 
-\method{plotseries}{zoo}(series, \dots)
+\method{plotseries}{zoo}(series, \dots, bm = NULL)
 
 }
 \arguments{
@@ -319,7 +319,7 @@ plotseries(series, ...)
 }
 \details{
 
-  The function builds on \code{\link{plot}}. It is very
+  The function builds on \code{\link{plot}} and is
   experimental; its argument list is not stable. It is
   strongly suggested that you pass arguments by name,
   not by position.

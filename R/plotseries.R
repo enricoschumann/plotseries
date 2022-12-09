@@ -5,10 +5,11 @@ plotseries <- function(series, ...) {
     UseMethod("plotseries")
 }
 
-plotseries.zoo <- function(series, ...) {
+plotseries.zoo <- function(series, ..., bm = NULL) {
     t <- index(series)
     series <- coredata(series)
-    plotseries.default(series, t = t, ...)
+    bm <- coredata(bm[t])
+    plotseries.default(series, t = t, bm = bm, ...)
 }
 
 .fmt_r <- function(x)
