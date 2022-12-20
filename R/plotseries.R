@@ -510,7 +510,7 @@ function(series,
                  lab,
                  pos = labels.pos,
                  cex = labels.cex,
-                 col = labels.col)
+                 col = median.col)
             par(xpd = FALSE)
         }
 
