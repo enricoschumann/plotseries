@@ -1,5 +1,5 @@
 ## -*- truncate-lines: t; -*-
-## Copyright (C) 2019-22  Enrico Schumann
+## Copyright (C) 2019-23  Enrico Schumann
 
 plotseries <- function(series, ...) {
     UseMethod("plotseries")
@@ -170,14 +170,17 @@ function(series,
     if (inherits(t, "yearmon")) {
         time.labels.at <- t
         time.labels <- format(t, "%m %Y")
+        ## time.labels <- as.character(time.labels.at)
+        numeric.t <- TRUE
     }
 
 
     ## compute returns, to be shown in labels
-    if (numeric.t)
+    if (numeric.t) {
         returns.period <- "total"
-
-
+        add.yearly.grid <- FALSE
+    }
+    
     if (returns.show)
         R <- returns(series, t = t, period = returns.period)
 
@@ -271,7 +274,6 @@ function(series,
                   probs = probs,
                   lines = FALSE,
                   log.scale = log.scale,
-                  ## initial.value = 1,
                   median.show = median.show,
                   median.col = median.col,
                   ...)
@@ -313,7 +315,7 @@ function(series,
     if (!lines) {
 
         if (main != "")
-            mtext(main, 3, cex = main.cex, col = grey(0.5))
+            mtext(main, 3, cex = main.cex, col = main.col)
 
         x2 <- axTicks(2)
         if (length(y.labels.at.add))
@@ -367,14 +369,14 @@ function(series,
                                labels = time.labels)
 
                 } else {
-                    if (is.null(time.labels.format))
+                    if (is.null(time.labels.format)) {
                         axis.Date(1, lwd = 0, at = time.labels.at)
-                    else
+                    } else
                         axis.Date(1, lwd = 0,
                                   at = time.labels.at,
                                   format = time.labels.format,
                                   labels = time.labels)
-                    }
+                }
             }
         } else {
             if (numeric.t)
@@ -395,11 +397,11 @@ function(series,
         }
 
         if (!is.null(time.grid.at)) {
-            abline(v = time.grid.at, lwd = 0.25, col = grey(0.8))
+            abline(v = time.grid.at, lwd = 0.25, col = time.grid.col)
         } else if (add.yearly.grid) {
-            x1 <- seq(first_of_year(head(t, 1)),
-                      first_of_year(tail(t, 1)), by = "1 year")
-            abline(v = x1, lwd = 0.25, col = grey(0.8))
+            x1 <- seq(first_of_year(as.Date(head(t, 1))),
+                      first_of_year(as.Date(tail(t, 1))), by = "1 year")
+            abline(v = x1, lwd = 0.25, col = time.grid.col)
         }
     }
 
@@ -440,11 +442,14 @@ function(series,
     if (!isFALSE(labels)) {
         if (length(labels) == 1L && (is.na(labels) || labels == ""))
             labels <- rep(labels, NCOL(series))
-
+        if (isTRUE(labels) && length(colnames(series))) {
+            labels <- colnames(series)
+        }
         if (length(labels) > NCOL(series)) {
             warning("some labels are dropped (more labels than series)")
             labels <- labels[1:NCOL(series)]
         }
+
         do.show <- !is.na(labels)
         lab <- labels
         lab[is.na(lab)] <- ""
@@ -562,6 +567,7 @@ function(series,
     invisible(NULL)
 }
 
+
 .quantile <- function(P, t,
                       probs = NULL,
                       log.scale = FALSE,
@@ -579,7 +585,7 @@ function(series,
     } else {
         levels <- 0.1
     }
-    greys  <- seq(0.7,  0.50, length.out = length(levels))
+    greys <- seq(0.7, 0.50, length.out = length(levels))
 
     args <- list(...)
 
@@ -594,6 +600,7 @@ function(series,
         lines(t, apply(P, 1, median), col = median.col)
     invisible(NULL)
 }
+
 
 .streaks <-
 function(x,

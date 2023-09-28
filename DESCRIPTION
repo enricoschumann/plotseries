@@ -1,8 +1,8 @@
 Package: plotseries
 Type: Package
 Title: Time-Series Plots
-Version: 0.2-0
-Date: 2022-12-09
+Version: 0.2.0
+Date: 2023-09-28
 Maintainer: Enrico Schumann <es@enricoschumann.net>
 Authors@R: person("Enrico", "Schumann",
                   role  = c("aut", "cre"),
@@ -20,7 +20,7 @@ Description: Plot financial time-series, such as a portfolio
   uninterrupted up or down movement.
 Imports: PMwR, datetimeutils, grDevices, graphics,
          neighbours, utils, zoo
-Suggests: NMOF, bundesbank
+Suggests: NMOF, bundesbank, BISdata
 License: GPL-3
 URL: http://enricoschumann.net/R/packages/plotseries/ ,
      https://git.sr.ht/~enricoschumann/plotseries/ ,

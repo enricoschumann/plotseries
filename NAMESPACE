@@ -16,9 +16,12 @@ importFrom("graphics",
 importFrom("utils",
            "tail", "head")
 
-importFrom("PMwR", "returns", "scale1", "streaks")
+importFrom("PMwR",
+           "returns", "scale1", "streaks")
 
-importFrom("zoo", "index", "coredata", "na.locf")
+importFrom("zoo",
+           "index", "coredata", "na.locf",
+           "as.Date.yearmon", "as.Date.yearqtr")
 
 importFrom("datetimeutils", "first_of_year")
 

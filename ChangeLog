@@ -1,3 +1,9 @@
+2023-09-28  Enrico Schumann  <es@enricoschumann.net>
+
+        * DESCRIPTION (Suggests): add BISdata
+        (Version): 0.2.0 (use dots only as separators, i.e.
+        no hyphen)
+
 2022-12-09  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries.zoo): add argument
