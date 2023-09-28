@@ -65,8 +65,9 @@ plotseries(series, ...)
 
 }
 \arguments{
-  \item{series}{
-    a zoo series
+  \item{series}{%
+    \code{numeric} or a zoo series; may be a matrix, with
+    series arranged in columns
   }
   \item{t}{
     timestamp, typically of class \code{\link{Date}}
@@ -364,10 +365,26 @@ plotseries(series, ...)
 \value{
   Called for its side effect.
 }
+\references{
+
+
+  Gilli, M., Maringer, D. and Schumann, E. (2019) \emph{Numerical Methods
+    and Optimization in Finance}. 2nd edition. Elsevier.
+  \doi{10.1016/C2017-0-01621-X}
+
+  Schumann, E. (2023) \emph{Portfolio Management
+    with R}. \url{http://enricoschumann.net/PMwR/}
+
+  Tufte, E.R.(2001) \emph{The Visual Display of Quantitative
+  Information}. 2nd edition. Graphics Press. (chapter 6, in particular)
+
+}
 \author{
   Enrico Schumann
 }
-\section{Warning}{The function is not stable yet.}
+\section{Warning}{
+  The function is not stable yet.
+}
 \seealso{
 
   \code{\link{plot}}
