@@ -1,3 +1,10 @@
+v0.2-1  (2023-10-13; not yet released)
+
+  o plotseries now invisibly returns a list with
+    parameters
+
+  o ....
+
 v0.2-0  (2023-09-28)
 
   o plotseries now supports different types of plots,

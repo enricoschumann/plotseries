@@ -1,3 +1,8 @@
+2023-10-13  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries): return a list, with
+        currently only a single member ("time.grid.at")
+
 2023-09-28  Enrico Schumann  <es@enricoschumann.net>
 
         * DESCRIPTION (Suggests): add BISdata

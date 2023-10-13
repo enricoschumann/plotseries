@@ -126,6 +126,8 @@ function(series,
 
          ) {
 
+    res <- list()
+
     .series.types <- c("level", "streaks",
                        "fan", "quantile",
                        "drawdown", "returns")
@@ -168,9 +170,17 @@ function(series,
 
     ## handle yearmon/yearqtr
     if (inherits(t, "yearmon")) {
-        time.labels.at <- t
-        time.labels <- format(t, "%m %Y")
-        ## time.labels <- as.character(time.labels.at)
+        if (is.null(time.labels.at))
+            time.labels.at <- t
+        if (isTRUE(time.labels))
+            time.labels <- format(time.labels.at, "%m %Y")
+        numeric.t <- TRUE
+    }
+    if (inherits(t, "yearqtr")) {
+        if (is.null(time.labels.at))
+            time.labels.at <- t
+        if (isTRUE(time.labels))
+            time.labels <- format(time.labels.at, "Q%q %Y")
         numeric.t <- TRUE
     }
 
@@ -180,7 +190,7 @@ function(series,
         returns.period <- "total"
         add.yearly.grid <- FALSE
     }
-    
+
     if (returns.show)
         R <- returns(series, t = t, period = returns.period)
 
@@ -388,10 +398,13 @@ function(series,
         if (time.grid) {
             if (xpd.vlines)
                 par(xpd = TRUE)
-            if (is.null(time.grid.at))
+            if (is.null(time.grid.at)) {
                 abline(v = xx, lwd = 0.25, col = time.grid.col)
-            else
+                res$time.grid.at <- xx
+            } else {
                 abline(v = time.grid.at, lwd = 0.25, col = time.grid.col)
+                res$time.grid.at <- time.grid.at
+            }
             if (xpd.vlines)
                 par(xpd = FALSE)
         }
@@ -520,7 +533,8 @@ function(series,
         }
 
     }
-    invisible(NULL)
+
+    invisible(res)
 }
 
 .fan.zoo <- function(P,
