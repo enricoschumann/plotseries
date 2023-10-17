@@ -1,7 +1,9 @@
-v0.2-1  (2023-10-13; not yet released)
+v0.2-1  (2023-10-16; not yet released)
 
   o plotseries now invisibly returns a list with
     parameters
+    
+  o quantile and fan plots now render (much) faster
 
   o ....
 

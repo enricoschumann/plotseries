@@ -260,6 +260,7 @@ function(series,
              log.scale = log.scale,
              ## initial.value = 1,
              median.show = median.show,
+             median.col = median.col,
              ...)
 
     } else if (series.type == "quantile") {
@@ -550,7 +551,8 @@ function(series,
                  log.scale = log.scale, ...)
 }
 
-.fan <- function(P, t, n.levels = 5,
+.fan <- function(P, t,
+                 n.levels = 5,
                  probs = NULL,
                  log.scale = FALSE,
                  median.show = TRUE,
@@ -563,16 +565,23 @@ function(series,
     if (!is.null(probs)) {
         levels <- probs
     } else {
-        levels <- seq(0.10, 0.25, length.out = n.levels)
+        levels <- seq(0.10, 0.4, length.out = n.levels)
     }
+    if (any(levels >= 0.5)) {
+        levels <- levels[levels < 0.5]
+    }
+    levels <- sort(unique(levels))
+
     greys  <- seq(0.7,  0.50, length.out = length(levels))
 
-    args <- list(...)
+    args <- list(...)  ## currently not used
 
-    for (level in levels) {
-        l <- apply(P, 1, quantile, level)
-        u <- apply(P, 1, quantile, 1 - level)
-        col <- grey(greys[level == levels])
+    Levels <- c(levels, rev(1 - levels))
+    Q <- apply(P, 1, quantile, Levels)
+    for (i in seq_along(levels)) {
+        l <- Q[i, ]
+        u <- Q[nrow(Q) - i + 1,]
+        col <- grey(greys[i])
         polygon(c(t, rev(t)), c(l, rev(u)),
                 col = col, border = NA)
     }
@@ -583,30 +592,36 @@ function(series,
 
 
 .quantile <- function(P, t,
+                      n.levels = 5,
                       probs = NULL,
                       log.scale = FALSE,
                       median.show = TRUE,
                       median.col = grey(.4),
                       ...) {
 
-    ## if (is.finite(initial.value))
-    ##     P <- scale1(P, level = initial.value)
     if (is.null(dim) || ncol(P) == 1L)
         warning("a single series makes a slim fan")
     nt <- nrow(P)
     if (!is.null(probs)) {
         levels <- probs
     } else {
-        levels <- 0.1
+        levels <- seq(0.10, 0.4, length.out = n.levels)
     }
-    greys <- seq(0.7, 0.50, length.out = length(levels))
+    if (any(levels >= 0.5)) {
+        levels <- levels[levels < 0.5]
+    }
+    levels <- sort(unique(levels))
 
-    args <- list(...)
+    greys  <- seq(0.7,  0.50, length.out = length(levels))
 
-    for (level in levels) {
-        l <- apply(P, 1, quantile, level)
-        u <- apply(P, 1, quantile, 1 - level)
-        col <- grey(greys[level == levels])
+    args <- list(...)  ## currently not used
+
+    Levels <- c(levels, rev(1 - levels))
+    Q <- apply(P, 1, quantile, Levels)
+    for (i in seq_along(levels)) {
+        l <- Q[i, ]
+        u <- Q[nrow(Q) - i + 1,]
+        col <- grey(greys[i])
         lines(t, l, col = col)
         lines(t, u, col = col)
     }
