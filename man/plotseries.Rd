@@ -40,7 +40,9 @@ plotseries(series, ...)
            time.labels.at = NULL, time.labels.format = NULL,
            add.yearly.grid = FALSE,
            ##
-           par.list = list(), axis.cex = 1, axis.col = grey(0.5),
+           par.list = list(),
+           reset.par = TRUE,
+           axis.cex = 1, axis.col = grey(0.5),
            white.underlay = FALSE, white.underlay.width = 2,
            font.family = "", colon = ": ", percent = "\%", big.mark = "'",
            bm = NULL, bm.returns = FALSE,
@@ -221,19 +223,22 @@ plotseries(series, ...)
   \item{font.family}{
     logical
   }
-
   \item{dollars.show}{
     logical
   }
   \item{dollars.arrow}{
     character. A safe choice (because it is \acronym{ASCII}) is \code{->}.
   }
-  \item{dollars.currency}{
-    character
+  \item{dollars.currency}{%
+    string
   }
   \item{par.list}{
     a list with named elements, such as
     \code{list(las = 1, mar = c(3, 3, 3, 3))}
+  }
+  \item{reset.par}{%
+    logical: if TRUE, all changed settings for
+    \code{\link{par}} are restored
   }
   \item{percent}{
     character

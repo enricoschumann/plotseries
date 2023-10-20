@@ -80,6 +80,7 @@ function(series,
          ## mgp = c(2, 0.25, 0),
 
          par.list = list(),
+         reset.par = TRUE,
 
          axis.cex = 1,
          axis.col = grey(0.5),
@@ -140,23 +141,7 @@ function(series,
          y.labels.at.remove <- numeric(0)
     }
 
-    par.lst <- list(las = 1,
-                    bty = "n",
-                    mar = c(1.25, 4, 1.25, 4.5),
-                    tck = 0.01,
-                    ps = 9.5,
-                    mgp = c(2, 0.25, 0),
-                    col.axis = grey(0.5))
-
-    par.lst[names(par.list)] <- par.list
-
-
-    old.par <- par(par.lst)
-    on.exit(par(old.par), add = TRUE)
-
-
     ylab <- paste(ylab, collapse = "")
-
 
     if (is.null(last.format))
         last.format <-
@@ -213,6 +198,21 @@ function(series,
                                           by = paste(time.grid.at)))
     }
 
+
+    par.lst <- list(las = 1,
+                    bty = "n",
+                    mar = c(1.25, 4, 1.25, 4.5),
+                    tck = 0.01,
+                    ps = 9.5,
+                    mgp = c(2, 0.25, 0),
+                    col.axis = grey(0.5))
+
+    par.lst[names(par.list)] <- par.list
+
+    old.par <- par(par.lst, no.readonly = TRUE)
+    res$old.par <- old.par
+    if (reset.par)
+        on.exit(par(old.par), add = TRUE)
     do.call(par, par.lst)
 
     series <- as.matrix(series)

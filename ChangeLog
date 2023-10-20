@@ -1,3 +1,8 @@
+2023-10-20  Enrico Schumann  <es@enricoschumann.net>
+
+	* R/plotseries.R (plotseries): add argument
+	'reset.par', with default TRUE
+
 2023-10-16  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (.quantile, .fan): computation of

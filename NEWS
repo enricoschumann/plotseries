@@ -1,10 +1,13 @@
-v0.2-1  (2023-10-16; not yet released)
+v0.2-1  (2023-10-20; not yet released)
 
   o plotseries now invisibly returns a list with
     parameters
-    
+
   o quantile and fan plots now render (much) faster
 
+  o new argument "reset.par"; if TRUE (the default),
+    par settings are restored after plotting
+    
   o ....
 
 v0.2-0  (2023-09-28)
