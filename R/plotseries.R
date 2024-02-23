@@ -1,5 +1,5 @@
 ## -*- truncate-lines: t; -*-
-## Copyright (C) 2019-23  Enrico Schumann
+## Copyright (C) 2019-24  Enrico Schumann
 
 plotseries <- function(series, ...) {
     UseMethod("plotseries")
@@ -520,9 +520,9 @@ function(series,
             }
 
         } else if (series.type %in% c("quantile", "fan")) {
-            lab <- paste("median ", .fmt_r(median(R)))  ## FIXME
+            lab <- paste0(.fmt_r(quantile(R, probs = probs)), "%")
             y.temp <- na.locf(series)
-            y <- median(coredata(tail(y.temp, 1)))
+            y <- quantile(coredata(tail(y.temp, 1)), probs = probs)
             par(xpd = TRUE)
             text(max(t),
                  y,
@@ -568,6 +568,7 @@ function(series,
         levels <- seq(0.10, 0.4, length.out = n.levels)
     }
     if (any(levels >= 0.5)) {
+        levels <- round(c(1 - levels, levels), 10)
         levels <- levels[levels < 0.5]
     }
     levels <- sort(unique(levels))
@@ -608,6 +609,7 @@ function(series,
         levels <- seq(0.10, 0.4, length.out = n.levels)
     }
     if (any(levels >= 0.5)) {
+        levels <- round(c(1 - levels, levels), 10)
         levels <- levels[levels < 0.5]
     }
     levels <- sort(unique(levels))

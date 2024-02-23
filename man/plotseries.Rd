@@ -256,11 +256,13 @@ plotseries(series, ...)
     logical
   }
   \item{probs}{
-    a vector probabilities, used for fan and quantile plots
-}
+    a vector probabilities, used for fan and quantile plots.
+    Quantiles are always chosen symmetrically, and values
+    below 0.5 are mirrored; e.g. 0.1 implies 0.9.
+  }
   \item{streaks.up}{
     numeric
-}
+  }
   \item{streaks.down}{
     numeric
 }
