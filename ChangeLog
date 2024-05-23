@@ -1,3 +1,8 @@
+2024-05-22  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries.default): add argument
+        'lty'
+
 2024-05-06  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries.default): add argument

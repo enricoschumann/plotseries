@@ -46,7 +46,8 @@ function(series,
 
          lwd = 1,
          type = "l",
-
+         lty = 1,
+         
          main = "",
          main.cex = 0.7,
          main.col = grey(0.5),
@@ -233,6 +234,7 @@ function(series,
                  log = if (log.scale) "y" else "",
                  xaxt = "n",
                  yaxt = "n",
+                 lty = lty,
                  lwd = if (white.underlay) lwd*white.underlay.width else lwd,
                  ylim = ylim, ...)
 
@@ -434,6 +436,7 @@ function(series,
                           lwd = white.underlay.width, ...)
                 lines(t, series[, i], col = col[i],
                       lwd = if (length(lwd) > 1L) lwd[i] else lwd,
+                      lty = if (length(lty) > 1L) lty[i] else lty,
                       type = type,
                       ...)
             }
