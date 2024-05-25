@@ -1,32 +1,44 @@
-v0.2-1  (2024-05-22; not yet released)
+v0.3-0  (2024-05-25)
 
-  o plotseries now invisibly returns a list with
-    parameters
+  o plotseries now invisibly returns a list with parameters
 
   o quantile and fan plots now render (much) faster
 
-  o new argument "reset.par"; if TRUE (the default),
-    par settings are restored after plotting
-    
-  o ....
+  o new argument "reset.par"; if TRUE (the default), par
+    settings are restored after plotting. (But FALSE is
+    often appropriate if additional elements are to be
+    added, e.g. via 'abline'.)
+
+  o line type can now be specified with 'lty', as in
+    standard 'plot'
+
+  o new argument "warn.fan1"; if TRUE, warn when a fanplot
+    is to be computed from a single series (the warning had
+    always been issued, and the new argument provides a way
+    to suppress it)
+
+  o 'quantile' and 'fan' plots add labels to all chosen
+    "probs", not just the median
+
+  o fixed: argument 'median.col' had been ignored in 'fan'
+    plots
 
 v0.2-0  (2023-09-28)
 
   o plotseries now supports different types of plots,
     controlled by argument 'series.type': "level" (the
-    default), "fan", "quantile", "streaks".  For
-    examples, see the vignette, or this note:
+    default), "fan", "quantile", "streaks".  For examples,
+    see the vignette, or this note:
     http://enricoschumann.net/notes/streaks-in-equity-returns-and-yield-changes.html
 
-  o the 'par' settings that plotseries changes
-    internally are restored to previous values when the
-    function ends
+  o the 'par' settings that plotseries changes internally
+    are restored to previous values when the function ends
 
   o experimental support for "zoo::yearmon" timestamps,
     as well as plain numeric timestamps (1, 2, 3, ...)
 
-  o experimental options to automatically displace
-    (shift) labels to avoid overlap
+  o experimental options to automatically displace (shift)
+    labels to avoid overlap
 
   o see the ChangeLog for more details
 

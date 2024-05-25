@@ -8,3 +8,5 @@ dev
 dev/
 fama-french3.png
 x.RData
+vignettes/auto/
+

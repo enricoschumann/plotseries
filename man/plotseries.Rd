@@ -19,14 +19,16 @@ plotseries(series, ...)
            labels.pos = 4, labels.col = NULL, labels.at = NULL,
            labels.at.offset = NULL, labels.min.height = 0.05,
            ##
-           returns.show = TRUE, returns.period = "ann",
+           returns.show = TRUE,
+           returns.period = "ann",
            ##
            dollars.show = FALSE, dollars.arrow = "\u2192",
            dollars.currency = "USD",
            ##
            last.show = FALSE, last.format = NULL,
            ##
-           ylab = "", ylim = NULL, lwd = 1, type = "l",
+           ylab = "", ylim = NULL, lwd = 1,
+           type = "l", lty = 1,
            ##
            main = "", main.cex = 0.7, main.col = grey(0.5),
            y.axis = TRUE, y.axis.pos = "left",
@@ -61,6 +63,8 @@ plotseries(series, ...)
            streaks.down.labels.cex = streaks.up.labels.cex,
            ##
            median.show = TRUE, median.col = grey(0.4),
+           ##
+           warn.fan1 = TRUE,
            \dots)
 
 \method{plotseries}{zoo}(series, \dots, bm = NULL)
@@ -214,7 +218,7 @@ plotseries(series, ...)
   \item{axis.col}{
     a colour (see \code{\link{colours}})
   }
-  \item{lwd}{
+  \item{lwd,lty}{
     numeric; see \code{\link{plot}}
   }
   \item{type}{
@@ -326,7 +330,10 @@ plotseries(series, ...)
   \item{median.col}{
     a valid colour specification
   }
-
+  \item{warn.fan1}{
+    logical: if \code{\link{TRUE}}, warn if only a single series is
+    provided but a plot based on multiple series is requested
+  }
 }
 \details{
 
@@ -338,15 +345,15 @@ plotseries(series, ...)
 
   \subsection{Plot types}{
 
-    \itemize{
-      \item{level} the default type, a simple line plot
-      \item{streaks} see
-      \url{http://enricoschumann.net/R/packages/PMwR/manual/PMwR.html#orgf6d2a94}
+    \describe{%
+      \item{level}{the default type, a simple line plot}
+      \item{streaks}{see
+      \url{http://enricoschumann.net/R/packages/PMwR/manual/PMwR.html#drawdowns-streaks}}
       \item{quantile}{requires a matrix of series:
-      plots quantiles of the series. See the vignette.}
+        plots quantiles of the series. See the vignette.}
       \item{fan}{requires a matrix of series:
-      plots series in shades of \code{\link{grey}}. See the vignette.}
-      }
+        plots series in shades of \code{\link{grey}}. See the vignette.}
+    }
   }
 
 
@@ -354,7 +361,7 @@ plotseries(series, ...)
 
     \code{plotseries} applies the following default settings via
     \code{\link{par}}:
-\preformatted{
+    \preformatted{
         list(las = 1,
              bty = "n",
              mar = c(1.25, 4, 1.25, 4.5),
@@ -363,14 +370,16 @@ plotseries(series, ...)
              mgp = c(2, 0.25, 0),
              col.axis = grey(0.5))}
 
-  These parameters can be overwritten by specifying
-  \code{par.list}.
+    These parameters can be overwritten by specifying
+    \code{par.list}.
 
-}
+  }
 
 }
 \value{
-  Called for its side effect.
+  The function is primarily called for its side effect.
+  It also returns, invisibly, a list with plotting information.
+
 }
 \references{
 
@@ -379,7 +388,7 @@ plotseries(series, ...)
     and Optimization in Finance}. 2nd edition. Elsevier.
   \doi{10.1016/C2017-0-01621-X}
 
-  Schumann, E. (2023) \emph{Portfolio Management
+  Schumann, E. (2024) \emph{Portfolio Management
     with R}. \url{http://enricoschumann.net/PMwR/}
 
   Tufte, E.R.(2001) \emph{The Visual Display of Quantitative

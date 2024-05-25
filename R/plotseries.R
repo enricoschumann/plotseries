@@ -47,7 +47,7 @@ function(series,
          lwd = 1,
          type = "l",
          lty = 1,
-         
+
          main = "",
          main.cex = 0.7,
          main.col = grey(0.5),

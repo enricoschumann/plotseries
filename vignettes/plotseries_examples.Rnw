@@ -11,6 +11,7 @@
 \usepackage{natbib}
 \usepackage{xcolor}
 \usepackage{framed}
+\usepackage{parskip}
 \usepackage[flushmargin]{footmisc}
 \definecolor{grau2}{rgb}{.2,.2,.2}
 \definecolor{grau7}{rgb}{.7,.7,.7}
@@ -45,18 +46,17 @@ if (!require("NMOF"))
     stop("package ", sQuote("NMOF"), " is required for this vignette")
 if (!require("bundesbank"))
     stop("package ", sQuote("NMOF"), " is required for this vignette")
+options(scipen=1e7)
 @
 
 \section*{Time-series plots}
 
-Start with a classic time-series plot: the time-series
-of the Fama--French factors \citep{fama1992}.
-Package
+Start with several classic time-series: the Fama--French
+factors~\citep{fama1992}.  Package
 \href{https://cran.r-project.org/package=NMOF}{\textsc{NMOF}}
-provides a
-function
+provides a function
 \href{https://search.r-project.org/CRAN/refmans/NMOF/html/French.html}{\texttt{French}}
-to get the data.
+to fetch the most current data from Kenneth French's website.
 
 <<fig=TRUE, height=3, width=5.5>>=
 library("NMOF")
@@ -66,13 +66,20 @@ series <- French("~/Downloads/French/",
                  price.series = TRUE)
 plotseries(series,
            t = as.Date(row.names(series)),
-           col = hcl.colors(n = 12, palette = "Dark 2"),
+           col = hcl.colors(n = ncol(series), palette = "Dark 2"),
            log.scale = TRUE,
            labels = c("Market\n(excess return)", "SMB", "HML", "RF"),
            labels.col = TRUE)
 @
 
-Total return of the market.
+\noindent The numbers next to the labels show the
+annualized returns.
+
+\noindent
+\href{https://search.r-project.org/CRAN/refmans/NMOF/html/French.html}{\texttt{French}} also offers a series for the total return of the
+market, computed as the sum of \textsc{t}-bill and
+excess return, and then compounded.
+
 <<market, fig = TRUE, height=3, width=6>>=
 market <- French("~/Downloads/French/",
                  "market",
@@ -87,24 +94,37 @@ plotseries(market,
            labels = c("Market\n(total return)"))
 @
 
-For relative plots \citep{schumann2013b}, use the
-\texttt{bm} argument.
+\noindent Note that the plot uses a log scale, and we
+have added a note showing what would have come become of
+one dollar invested in the market since 1965.
 
+
+For relative plots \citep{schumann2013b}, use the
+\texttt{bm} (`benchmark') argument.  This will lead to
+plot of the ratio of the series and its benchmark.  An
+upward-sloping line indicates a higher return of the
+series when compared with the benchmark and vice versa; a
+sideways line indicates equal returns of series and
+benchmark.  We demonstrate such a plot with time-series
+of momentum portfolios (decile portfolios),
+relative to the overall market, with all portfolio
+value-weighted.
 <<momentum1, fig = TRUE, height=3, width=6>>=
 series <- French("~/Downloads/French/",
                  "10_Portfolios_Prior_12_2_Daily_CSV.zip",
-                 frequency = "daily",
+                 weighting = "value",
+                 frequency = "monthly",
                  price.series = TRUE)
-series <- series[rownames(series) > "1965-1-1", ]
+series <- series[rownames(series) >= "1965-1-1", ]
 
 plotseries(series,
-           bm = market[rownames(market) > "1965-1-1", ],
+           bm = market[rownames(market) >= "1965-1-1", ],
            t = as.Date(row.names(series)),
            col = hcl.colors(n = ncol(series)+5,
                             palette = "Dark Mint"),
            log.scale = TRUE,
            dollars.show = FALSE,
-           labels = paste("Momentum", c("low", 2:9, "high")),
+           labels = paste("Mom.", c("low", 2:9, "high")),
            labels.col = TRUE)
 @
 % TODO explain returns calculation
@@ -213,13 +233,13 @@ plotseries(x, t, series.type = "quantile",
            probs = c(0.1, 0.25, 0.5, 0.75, 0.9))
 @
 
-\section*{BISdata}
+%% \section*{BISdata}
 
 
-<<bis-rates-data>>=
-library("BISdata")
-BISdata::datasets()
-@ 
+%% <<bis-rates-data>>=
+%% library("BISdata")
+%% BISdata::datasets()
+%% @ 
 
 \bibliographystyle{plainnat}
 \bibliography{plotseries}
