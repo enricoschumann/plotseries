@@ -1,15 +1,19 @@
+2024-05-28  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries): rename
+        "warn.fan1" to "warn1"
+
 2024-05-25  Enrico Schumann  <es@enricoschumann.net>
 
         * DESCRIPTION (Version): 0.3.0
 
 2024-05-22  Enrico Schumann  <es@enricoschumann.net>
 
-        * R/plotseries.R (plotseries.default): add argument
-        'lty'
+        * R/plotseries.R (plotseries): add argument 'lty'
 
 2024-05-06  Enrico Schumann  <es@enricoschumann.net>
 
-        * R/plotseries.R (plotseries.default): add argument
+        * R/plotseries.R (plotseries): add argument
         "warn.fan1"; if TRUE, warn when a fanplot is to be
         computed from a single series (the warning had always
         been issued, and the new argument provides a way to

@@ -123,7 +123,7 @@ function(series,
 
          median.show = TRUE,
          median.col = grey(.4),
-         warn.fan1 = TRUE,
+         warn1 = TRUE,
          ...
 
 
@@ -265,7 +265,7 @@ function(series,
              median.show = median.show,
              median.col = median.col,
              ...,
-             warn.fan1 = warn.fan1)
+             warn1 = warn1)
 
     } else if (series.type == "quantile") {
 
@@ -291,7 +291,8 @@ function(series,
                   log.scale = log.scale,
                   median.show = median.show,
                   median.col = median.col,
-                  ...)
+                  ...,
+                  warn1 = warn1)
 
     } else if (series.type == "streaks") {
 
@@ -563,9 +564,9 @@ function(series,
                  median.show = TRUE,
                  median.col = grey(.4),
                  ...,
-                 warn.fan1) {
+                 warn1) {
 
-    if (warn.fan1 && is.null(dim) || ncol(P) == 1L)
+    if (warn1 && (is.null(dim) || ncol(P) == 1L))
         warning("a single series makes a slim fan")
     nt <- nrow(P)
     if (!is.null(probs)) {
@@ -604,9 +605,10 @@ function(series,
                       log.scale = FALSE,
                       median.show = TRUE,
                       median.col = grey(.4),
-                      ...) {
+                      ...,
+                      warn1) {
 
-    if (is.null(dim) || ncol(P) == 1L)
+    if (warn1 && (is.null(dim) || ncol(P) == 1L))
         warning("a single series makes a slim fan")
     nt <- nrow(P)
     if (!is.null(probs)) {
