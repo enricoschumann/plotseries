@@ -386,12 +386,16 @@ function(series,
 
                 } else {
                     if (is.null(time.labels.format)) {
-                        axis.Date(1, lwd = 0, at = time.labels.at)
+                        if (!is.null(time.labels)) {
+                            xx <- axis(1, at = time.labels.at,
+                                       labels = time.labels, lwd = 0)
+                        } else
+                            xx <- axis.Date(1, lwd = 0, at = time.labels.at)
                     } else
-                        axis.Date(1, lwd = 0,
-                                  at = time.labels.at,
-                                  format = time.labels.format,
-                                  labels = time.labels)
+                        xx <- axis.Date(1, lwd = 0,
+                                        at = time.labels.at,
+                                        format = time.labels.format,
+                                        labels = time.labels)
                 }
             }
         } else {

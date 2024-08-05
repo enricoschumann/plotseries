@@ -1,10 +1,10 @@
-v0.4-0  (2024-05-28; not yet released)
+v0.4-0  (2024-08-05; not yet released)
 
   o argument "warn.fan1" has been renamed to "warn1",
     since it also affects quantile plots
 
   o ....
-  
+
 v0.3-0  (2024-05-25)
 
   o plotseries now invisibly returns a list with parameters

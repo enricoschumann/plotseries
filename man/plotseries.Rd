@@ -64,7 +64,7 @@ plotseries(series, ...)
            ##
            median.show = TRUE, median.col = grey(0.4),
            ##
-           warn.fan1 = TRUE,
+           warn1 = TRUE,
            \dots)
 
 \method{plotseries}{zoo}(series, \dots, bm = NULL)
@@ -319,8 +319,9 @@ plotseries(series, ...)
     well
 
   }
-  \item{colon}{
-    character: the separator between series name, and return or last value
+  \item{colon}{%
+    character: the separator between series name, and return
+    or last value
   }
 
   Customizing medians (only for fan and quantile plot):
@@ -330,12 +331,15 @@ plotseries(series, ...)
   \item{median.col}{
     a valid colour specification
   }
-  \item{warn.fan1}{
-    logical: if \code{\link{TRUE}}, warn if only a single series is
-    provided but a plot based on multiple series is requested
+
+  For fan and quantile plots:
+  \item{warn1}{%
+    logical: if \code{\link{TRUE}}, warn if only a single
+    series is provided but a plot based on multiple series
+    is requested
   }
 }
-\details{
+\details{%
 
   The function builds on \code{\link{plot}} and is
   experimental; its argument list is not stable. It is
@@ -348,7 +352,7 @@ plotseries(series, ...)
     \describe{%
       \item{level}{the default type, a simple line plot}
       \item{streaks}{see
-      \url{http://enricoschumann.net/R/packages/PMwR/manual/PMwR.html#drawdowns-streaks}}
+      \url{https://enricoschumann.net/R/packages/PMwR/manual/PMwR.html#drawdowns-streaks}}
       \item{quantile}{requires a matrix of series:
         plots quantiles of the series. See the vignette.}
       \item{fan}{requires a matrix of series:
@@ -389,7 +393,7 @@ plotseries(series, ...)
   \doi{10.1016/C2017-0-01621-X}
 
   Schumann, E. (2024) \emph{Portfolio Management
-    with R}. \url{http://enricoschumann.net/PMwR/}
+    with R}. \url{https://enricoschumann.net/PMwR/}
 
   Tufte, E.R.(2001) \emph{The Visual Display of Quantitative
   Information}. 2nd edition. Graphics Press. (chapter 6, in particular)
