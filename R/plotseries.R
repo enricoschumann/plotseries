@@ -481,9 +481,10 @@ function(series,
         if (returns.show)
             lab <- paste0(lab, ifelse(do.show, colon, ""),
                           .fmt_r(R), "%")
-        if (last.show)
+        if (last.show) {
             lab <- paste0(lab, colon,
                           paste0(last.format(coredata(tail(series, 1)))))
+        }
         ## if (!is.null(lab.fun)) {
         ##     if (NCOL(series) == 1)
         ##         lab <- paste0(lab, colon, lab.fun(series))
