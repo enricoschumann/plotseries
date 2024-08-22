@@ -33,15 +33,13 @@ library("NMOF")   ## provides function 'French'
 series <- French("~/Downloads/French/",
                  "F-F_Research_Data_Factors_daily_CSV.zip",
                  frequency = "daily",
-                 price.series = TRUE)
+                 price.series = TRUE,
+                 return.class = "zoo")
 
 ## plot
 plotseries(series,
-           t = as.Date(row.names(series)),
-           col = hcl.colors(n = 3+ncol(series), palette = "Dark 3"),
+           col = hcl.colors(n = ncol(series), palette = "Dark 3"),
            log.scale = TRUE,
-           par.list = list(ps = 13, mar = c(3,3,1,7)),
-           labels.at.offset = c(0,0,2,-1),
            labels = c("Market\n(excess return)",
                       "SMB", "HML", "RF"),
            labels.col = TRUE)
