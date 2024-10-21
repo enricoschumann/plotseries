@@ -1,3 +1,9 @@
+2024-10-21  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries): add argument
+        'time.labels.cex', with default 1; it passed to
+        'axis' as argument 'cex.axis'
+
 2024-05-28  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries): rename

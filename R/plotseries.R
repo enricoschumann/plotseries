@@ -73,6 +73,7 @@ function(series,
          time.labels = TRUE,
          time.labels.at = NULL,
          time.labels.format = NULL,
+         time.labels.cex = 1,
 
 
          add.yearly.grid = FALSE,  ## remove?
@@ -388,14 +389,16 @@ function(series,
                     if (is.null(time.labels.format)) {
                         if (!is.null(time.labels)) {
                             xx <- axis(1, at = time.labels.at,
-                                       labels = time.labels, lwd = 0)
+                                       labels = time.labels, lwd = 0,
+                                       cex.axis = time.labels.cex)
                         } else
                             xx <- axis.Date(1, lwd = 0, at = time.labels.at)
                     } else
                         xx <- axis.Date(1, lwd = 0,
                                         at = time.labels.at,
                                         format = time.labels.format,
-                                        labels = time.labels)
+                                        labels = time.labels,
+                                        cex.axis = time.labels.cex)
                 }
             }
         } else {
