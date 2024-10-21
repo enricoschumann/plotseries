@@ -3,6 +3,8 @@
         * R/plotseries.R (plotseries): add argument
         'time.labels.cex', with default 1; it passed to
         'axis' as argument 'cex.axis'
+        (plotseries): when timestamps are of class 'POSIXt',
+        then 'axis.POSIXct' is called
 
 2024-05-28  Enrico Schumann  <es@enricoschumann.net>
 

@@ -139,6 +139,12 @@ function(series,
         stop("unknown series.type")
     }
 
+    ## if ("xlab" %in% ...names()) {
+
+    ##     ...elt(which("xlab" == ...names())) <- NULL
+
+    ## }
+
     if (series.type == "streaks") {
          y.labels.at.add <- numeric(0)
          y.labels.at.remove <- numeric(0)
@@ -373,9 +379,13 @@ function(series,
                 ## 'time.labels.at' NOT defined
                 if (numeric.t)
                     xx <- axis(1, lwd = 0)
-                else
-                    xx <- axis.Date(1, lwd = 0, x = t)
+                else {
+                    if (inherits(t, "POSIXt")) {
+                        xx <- axis.POSIXct(1, lwd = 0, x = t)
+                    } else
+                        xx <- axis.Date(1, lwd = 0, x = t)
 
+                }
             else {
 
                 ## 'time.labels.at' is defined
