@@ -31,6 +31,7 @@ function(series,
 
          returns.show = TRUE,
          returns.period = "ann",
+         returns.na.rm = FALSE,
 
          dollars.show = FALSE,
          dollars.arrow = "\u2192",
@@ -125,6 +126,10 @@ function(series,
          median.show = TRUE,
          median.col = grey(.4),
          warn1 = TRUE,
+
+         rect.start = NULL,
+         rect.end = NULL,
+         rect.col = "grey",
          ...
 
 
@@ -159,7 +164,10 @@ function(series,
     if (missing(col))
         col <- rep(grey(0.4), NCOL(series))
 
-    numeric.t <- inherits(try(as.Date(t[1]), silent = TRUE), "try-error")
+    numeric.t <-
+        !inherits(t, "Date")   &&
+        !inherits(t, "POSIXt") &&
+         inherits(try(as.Date(t[1]), silent = TRUE), "try-error")
 
 
     ## handle yearmon/yearqtr
@@ -186,7 +194,9 @@ function(series,
     }
 
     if (returns.show)
-        R <- returns(series, t = t, period = returns.period)
+        R <- returns(series, t = t,
+                     period = returns.period,
+                     na.rm = returns.na.rm)
 
     if (!is.null(bm) && returns.show) {
         bm <- coredata(bm)
@@ -333,6 +343,25 @@ function(series,
 
     } else if (series.type == "returns") {
 
+    }
+
+    if (!is.null(rect.start)) {
+
+        for (i in seq_along(rect.start)) {
+            rect(rect.start[i], par()$usr[3],
+                 rect.end[i],   par()$usr[4], col = rect.col,
+                 border = NA)
+        }
+
+        if (!lines) {
+            lines(t,
+                 series[, 1L],
+                 type = type,
+                 col = if (white.underlay) "white" else col[1L],
+                 lty = lty,
+                 lwd = if (white.underlay) lwd*white.underlay.width else lwd,
+                 ...)
+        }
     }
 
     if (!lines) {

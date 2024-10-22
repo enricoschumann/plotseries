@@ -1,3 +1,9 @@
+2024-10-22  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries.default): add
+        arguments 'returns.na.rm', 'rect.start',
+        'rect.end' and 'rect.col'
+
 2024-10-21  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries): add argument
