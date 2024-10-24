@@ -1,7 +1,14 @@
-v0.4-0  (2024-08-05; not yet released)
+v0.4-0  (2024-10-24; not yet released)
 
-  o argument "warn.fan1" has been renamed to "warn1",
-    since it also affects quantile plots
+  o support POSIXt timestamps
+
+  o new arguments "shade.start", "shade.end" and
+    "shade.col" for background shading
+
+  o new argument "time.labels.cex"
+
+  o argument "warn.fan1" has been renamed to "warn1", since
+    it also affects quantile plots
 
   o ....
 

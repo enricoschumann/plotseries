@@ -1,6 +1,11 @@
+2024-10-23  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries): rename rect.* to
+        shade.*; recycle colours
+
 2024-10-22  Enrico Schumann  <es@enricoschumann.net>
 
-        * R/plotseries.R (plotseries.default): add
+        * R/plotseries.R (plotseries): add
         arguments 'returns.na.rm', 'rect.start',
         'rect.end' and 'rect.col'
 

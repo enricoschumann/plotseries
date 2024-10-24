@@ -127,9 +127,9 @@ function(series,
          median.col = grey(.4),
          warn1 = TRUE,
 
-         rect.start = NULL,
-         rect.end = NULL,
-         rect.col = "grey",
+         shade.start = NULL,
+         shade.end = NULL,
+         shade.col = "grey",
          ...
 
 
@@ -167,7 +167,7 @@ function(series,
     numeric.t <-
         !inherits(t, "Date")   &&
         !inherits(t, "POSIXt") &&
-         inherits(try(as.Date(t[1]), silent = TRUE), "try-error")
+         is.numeric(t)
 
 
     ## handle yearmon/yearqtr
@@ -345,11 +345,13 @@ function(series,
 
     }
 
-    if (!is.null(rect.start)) {
+    if (!is.null(shade.start)) {
 
-        for (i in seq_along(rect.start)) {
-            rect(rect.start[i], par()$usr[3],
-                 rect.end[i],   par()$usr[4], col = rect.col,
+        shade.cols <- rep(shade.col,
+                          length(shade.start)/length(shade.col))
+        for (i in seq_along(shade.start)) {
+            rect(shade.start[i], par()$usr[3],
+                 shade.end  [i], par()$usr[4], col = shade.cols[i],
                  border = NA)
         }
 
