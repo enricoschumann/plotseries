@@ -1,3 +1,9 @@
+2025-02-12  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries.zoo): when 'bm' is
+        specified, merge with series in case they are
+        not in sync
+
 2024-10-23  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries): rename rect.* to

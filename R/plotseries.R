@@ -1,11 +1,21 @@
 ## -*- truncate-lines: t; -*-
-## Copyright (C) 2019-24  Enrico Schumann
+## Copyright (C) 2019-25  Enrico Schumann
 
 plotseries <- function(series, ...) {
     UseMethod("plotseries")
 }
 
-plotseries.zoo <- function(series, ..., bm = NULL) {
+plotseries.zoo <- function(series, ..., bm = NULL, verbose = TRUE) {
+    if (!is.null(bm)) {
+        z <- merge(bm, series, all = FALSE)
+        if (verbose && any(m <- !index(series) %in% index(z)))
+            message("removed ", sum(m),
+                    " timestamps in ", sQuote("series"),
+                    " but not in ", sQuote("bm"))
+        bm     <- z[,  1L]
+        series <- z[, -1L]
+    }
+
     t <- index(series)
     series <- coredata(series)
     bm <- coredata(bm[t])
