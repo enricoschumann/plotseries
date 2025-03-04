@@ -484,7 +484,7 @@ function(series,
 
     if (series.type == "level") {
         lines(t, series[, 1L],  col = col[1L], lwd = lwd,
-              type = type, ...)
+              type = type, lty = lty, ...)
 
         if (NCOL(series) > 1)
             for (i in 2:ncol(series)) {
