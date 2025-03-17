@@ -7,13 +7,16 @@ plotseries <- function(series, ...) {
 
 plotseries.zoo <- function(series, ..., bm = NULL, verbose = TRUE) {
     if (!is.null(bm)) {
+        nb <- ncol(bm)
+        if (is.null(nb))
+            nb <- 1
         z <- merge(bm, series, all = FALSE)
         if (verbose && any(m <- !index(series) %in% index(z)))
             message("removed ", sum(m),
                     " timestamps in ", sQuote("series"),
                     " but not in ", sQuote("bm"))
-        bm     <- z[,  1L]
-        series <- z[, -1L]
+        bm     <- z[,  seq_len(nb)]
+        series <- z[, -seq_len(nb)]
     }
 
     t <- index(series)

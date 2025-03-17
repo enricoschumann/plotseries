@@ -1,3 +1,10 @@
+2025-03-17  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (plotseries.zoo): benchmark "bm"
+        may be more than one series, which is useful for
+        comparing a portfolio against several benchmarks at
+        once
+
 2025-03-04  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R: pass 'lty' for all series when
