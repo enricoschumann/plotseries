@@ -46,7 +46,7 @@ if (!require("NMOF"))
     stop("package ", sQuote("NMOF"), " is required for this vignette")
 if (!require("bundesbank"))
     stop("package ", sQuote("NMOF"), " is required for this vignette")
-options(scipen=1e7)
+options(scipen=9999)
 @
 
 \section*{Time-series plots}
@@ -239,7 +239,7 @@ plotseries(x, t, series.type = "quantile",
 %% <<bis-rates-data>>=
 %% library("BISdata")
 %% BISdata::datasets()
-%% @ 
+%% @
 
 \bibliographystyle{plainnat}
 \bibliography{plotseries}

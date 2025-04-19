@@ -1,3 +1,9 @@
+2025-04-19  Enrico Schumann  <es@enricoschumann.net>
+
+        * vignettes/plotseries_examples.Rnw: set option
+        scipen to 9999, since higher values trigger a
+        warning in R 4.5
+
 2025-03-17  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (plotseries.zoo): benchmark "bm"
