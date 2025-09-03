@@ -1,3 +1,8 @@
+2025-09-03  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (.quantile): pass 'returns.show'
+        argument
+
 2025-04-19  Enrico Schumann  <es@enricoschumann.net>
 
         * vignettes/plotseries_examples.Rnw: set option

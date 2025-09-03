@@ -322,6 +322,7 @@ function(series,
                   median.show = median.show,
                   median.col = median.col,
                   ...,
+                  returns.show = returns.show,
                   warn1 = warn1)
 
     } else if (series.type == "streaks") {
@@ -667,6 +668,7 @@ function(series,
                       log.scale = FALSE,
                       median.show = TRUE,
                       median.col = grey(.4),
+                      returns.show = FALSE,
                       ...,
                       warn1) {
 
@@ -695,10 +697,32 @@ function(series,
         u <- Q[nrow(Q) - i + 1,]
         col <- grey(greys[i])
         lines(t, l, col = col)
+        if (returns.show) {
+            ## text(max(t),
+            ##      l[length(l)],
+            ##      paste0(.fmt_r(returns(l, t, period = "ann")),
+            ##             "%"),
+            ##      pos = 4)
+        }
         lines(t, u, col = col)
+        if (returns.show) {
+            ## text(max(t),
+            ##      u[length(u)],
+            ##      paste0(.fmt_r(returns(u, t, period = "ann")),
+            ##             "%"),
+            ##      pos = 4)
+        }
     }
-    if (median.show)
-        lines(t, apply(P, 1, median), col = median.col)
+    if (median.show) {
+        med <- apply(P, 1, median)
+        lines(t, med, col = median.col)
+        if (returns.show) {
+            ## text(max(t),
+            ##      med[length(med)],
+            ##      paste0(.fmt_r(returns(med, t, period = "ann")),
+            ##             "%"))
+        }
+    }
     invisible(NULL)
 }
 
@@ -795,7 +819,7 @@ function(x,
                             neighbour = nb,
                             printBar = FALSE,
                             printDetail = FALSE,
-                            nI = 1000),
+                            nI = 3000),
                        y0 = y0, h = h)
 
     ans <- numeric(length(y.original))
