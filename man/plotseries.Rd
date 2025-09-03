@@ -263,6 +263,9 @@ plotseries(series, ...)
     a vector probabilities, used for fan and quantile plots.
     Quantiles are always chosen symmetrically, and values
     below 0.5 are mirrored; e.g. 0.1 implies 0.9.
+    (For values 0 and 1, \code{\link[stats]{quantile}} returns
+    the minimum and maximum of the data. So to plot a range
+    of data, use \code{probs = 0} and \code{series.type = "fan"}.)
   }
   \item{streaks.up}{
     numeric
