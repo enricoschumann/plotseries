@@ -10,6 +10,7 @@ importFrom("grDevices",
            "grey")
 
 importFrom("graphics",
+           "axis.POSIXct", "rect",
            "abline", "axTicks", "axis", "axis.Date",
            "lines", "par", "plot", "text", "mtext", "polygon")
 
