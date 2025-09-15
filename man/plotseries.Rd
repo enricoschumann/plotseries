@@ -21,6 +21,7 @@ plotseries(series, ...)
            ##
            returns.show = TRUE,
            returns.period = "ann",
+           returns.na.rm = FALSE,
            ##
            dollars.show = FALSE, dollars.arrow = "\u2192",
            dollars.currency = "USD",
@@ -40,6 +41,7 @@ plotseries(series, ...)
            time.grid.at = NULL, time.grid.col = grey(0.8),
            time.labels = TRUE,
            time.labels.at = NULL, time.labels.format = NULL,
+           time.labels.cex = 1,
            add.yearly.grid = FALSE,
            ##
            par.list = list(),
@@ -62,12 +64,16 @@ plotseries(series, ...)
            streaks.down.labels.col = NULL,
            streaks.down.labels.cex = streaks.up.labels.cex,
            ##
-           median.show = TRUE, median.col = grey(0.4),
+           median.show = TRUE, median.col = grey(0.33),
            ##
            warn1 = TRUE,
+           ##
+           shade.start = NULL,
+           shade.end = NULL,
+           shade.col = "grey",
            \dots)
 
-\method{plotseries}{zoo}(series, \dots, bm = NULL)
+\method{plotseries}{zoo}(series, \dots, bm = NULL, verbose = TRUE)
 
 }
 \arguments{
@@ -94,6 +100,9 @@ plotseries(series, ...)
   }
   \item{lines}{%
     logical: if \code{TRUE}, add to existing plot
+  }
+  \item{verbose}{%
+    logical: if \code{TRUE}, print messages
   }
 
   Customizing labels:
@@ -165,25 +174,30 @@ plotseries(series, ...)
 }
   \item{main.col}{
     character
-}
+  }
   \item{y.axis}{
     logical
   }
   \item{y.axis.pos}{
     logical
   }
+
+  The time axis (the \emph{x}-axis):
   \item{time.axis}{
     logical
-}
+  }
+  \item{time.labels}{
+    logical or character
+  }
   \item{time.labels.at}{
-..
-}
+    positions of labels
+  }
   \item{time.labels.format}{
     ..
-}
-  \item{time.labels}{
-    ..
-}
+  }
+  \item{time.labels.cex}{
+    numeric: character expansion; default is 1
+  }
   \item{time.grid}{
     logical
 }
@@ -322,10 +336,24 @@ plotseries(series, ...)
     well
 
   }
+
+  \item{returns.na.rm}{
+    logical. See \code{\link[PMwR]{returns}}.
+  }
+
   \item{colon}{%
     character: the separator between series name, and return
     or last value
   }
+
+  Shading the background:
+  \item{shade.start,shade.end}{%
+    timestamps; can be of length greater than 1    
+  }
+  \item{shade.col}{%
+    the colour to use
+  }
+  
 
   Customizing medians (only for fan and quantile plot):
   \item{median.show}{
