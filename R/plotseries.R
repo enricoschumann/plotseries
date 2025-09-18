@@ -5,7 +5,8 @@ plotseries <- function(series, ...) {
     UseMethod("plotseries")
 }
 
-plotseries.zoo <- function(series, ..., bm = NULL, verbose = TRUE) {
+plotseries.zoo <-
+function(series, ..., bm = NULL, verbose = TRUE) {
     if (!is.null(bm)) {
         nb <- ncol(bm)
         if (is.null(nb))
@@ -41,7 +42,8 @@ function(series,
          labels.at = NULL,
          labels.at.offset = NULL,
          labels.min.height = 0.05,
-
+         labels.at.auto.settings = list(),
+         
          returns.show = TRUE,
          returns.period = "ann",
          returns.na.rm = FALSE,
@@ -137,7 +139,7 @@ function(series,
          streaks.down.labels.cex = streaks.up.labels.cex,
 
          median.show = TRUE,
-         median.col = grey(.4),
+         median.col = grey(.33),
          warn1 = TRUE,
 
          shade.start = NULL,
@@ -167,6 +169,11 @@ function(series,
          y.labels.at.add <- numeric(0)
          y.labels.at.remove <- numeric(0)
     }
+
+    if (series.type == "fan" && !is.null(probs)) {
+        probs <- sort(unique(c(probs, 1 - probs)))
+    }
+
 
     ylab <- paste(ylab, collapse = "")
 
@@ -220,6 +227,10 @@ function(series,
         if (bm.returns)
             series <- 100*(series - 1)
     }
+    ## if (returns.show && series.type %in% c("fan")) {
+    ##     R <- quantile(R, probs = probs)
+    ## }
+
 
     if (is.character(time.grid.at) &&
         grep("year", time.grid.at, ignore.case = TRUE)) {
@@ -291,7 +302,6 @@ function(series,
              probs = probs,
              lines = FALSE,
              log.scale = log.scale,
-             ## initial.value = 1,
              median.show = median.show,
              median.col = median.col,
              ...,
@@ -524,7 +534,8 @@ function(series,
     if (!isFALSE(labels)) {
         if (length(labels) == 1L && (is.na(labels) || labels == ""))
             labels <- rep(labels, NCOL(series))
-        if (isTRUE(labels) && length(colnames(series))) {
+        if (isTRUE(labels) && length(colnames(series)) &&
+            !series.type %in% c("fan")) {
             labels <- colnames(series)
         }
         if (length(labels) > NCOL(series)) {
@@ -536,9 +547,10 @@ function(series,
         lab <- labels
         lab[is.na(lab)] <- ""
 
-        if (returns.show)
+        if (returns.show) {
             lab <- paste0(lab, ifelse(do.show, colon, ""),
                           .fmt_r(R), "%")
+        }
         if (last.show) {
             lab <- paste0(lab, colon,
                           paste0(last.format(coredata(tail(series, 1)))))
@@ -563,11 +575,21 @@ function(series,
                 y <- labels.at
             } else if (labels.at == "auto") {
                 y.temp <- na.locf(series)
-                y <- .spread_labels(
-                    y = drop(coredata(tail(y.temp, 1))),
-                    y.min = labels.min.height,
-                    y.range = par("usr")[3:4],
-                    log.scale = log.scale)
+                ## y <- .spread_labels(
+                ##     y = drop(coredata(tail(y.temp, 1))),
+                ##     y.min = labels.min.height,
+                ##     y.range = par("usr")[3:4],
+                ##     log.scale = log.scale)
+                ## browser()
+                y <- .spread_points(
+                    drop(coredata(tail(y.temp, 1))),
+                    width = labels.min.height,
+                    range = par("usr")[3:4],
+                    log.scale = log.scale,
+                    labels.at.auto.settings = list(m = 5))
+
+
+
             }
             if (!is.null(labels.at.offset)) {
                 y <- y + labels.at.offset
@@ -616,8 +638,8 @@ function(series,
     if (!is.null(aggregate) && aggregate == "monthly")
         P <- aggregate(P, datetimeutils::end_of_month(index(P)),
                        tail, 1)
-    .fan(P, t= index(P), n.levels = n.levels, probs = probs,
-                 log.scale = log.scale, ...)
+    .fan(P, t = index(P), n.levels = n.levels, probs = probs,
+         log.scale = log.scale, ...)
 }
 
 .fan <- function(P, t,
@@ -625,7 +647,7 @@ function(series,
                  probs = NULL,
                  log.scale = FALSE,
                  median.show = TRUE,
-                 median.col = grey(.4),
+                 median.col = grey(.33),
                  ...,
                  warn1) {
 
@@ -638,12 +660,10 @@ function(series,
         levels <- seq(0.10, 0.4, length.out = n.levels)
     }
     if (any(levels >= 0.5)) {
-        levels <- round(c(1 - levels, levels), 10)
         levels <- levels[levels < 0.5]
     }
     levels <- sort(unique(levels))
-
-    greys  <- seq(0.7,  0.50, length.out = length(levels))
+    greys  <- seq(0.7,  0.5, length.out = length(levels))
 
     args <- list(...)  ## currently not used
 
@@ -830,3 +850,71 @@ function(x,
     ans
 }
 
+
+.spread_points <-
+function(x,
+         width,
+         range,
+         log.scale = FALSE,
+         labels.at.auto.settings) {
+
+    settings <- list(
+        nI = 3000,
+        m = 2
+    )
+    if (length(labels.at.auto.settings)) {
+        settings[names(labels.at.auto.settings)] <-
+                       labels.at.auto.settings
+    }
+    
+    x.original <- x
+    ii <- order(x, decreasing = TRUE)
+
+    x <- sort(x, decreasing = TRUE)
+    if (log.scale)
+        x <- log(x, 10)
+
+    x_ <- x
+    oL <- function(x, x_, width, m) {
+        ## browser()
+        x - diff(range) * width/2 -> starts
+        x + diff(range) * width/2 -> ends
+        oL <- pmax(ends[-1] - starts[-length(starts)], 0)
+        sum(abs(oL)) + sum(abs(x - x_))/m
+    }
+
+    if (oL(x, x_, width, settings$m) == 0)
+        return(x.original)
+
+    nb <- function (x, x_, width, ...) {
+
+        ## x - width/2 -> starts
+        ## x + width/2 -> ends
+        ## oL <- pmax(ends[-length(ends)] - starts[-1], 0)
+        ## sum(abs(oL)) + sum(abs(x - x_))*0.2
+
+        i <- sample(length(x), 1)
+        stepsize <- 0.001 * diff(range) * runif(1L) *
+            sample(c(1, -1), 1)
+        x[i] <- x[i] + stepsize
+        x
+    }
+
+    sol <- NMOF::LSopt(oL,
+                       list(x0 = x,
+                            neighbour = nb,
+                            printBar = FALSE,
+                            printDetail = FALSE,
+                            nI = settings$nI),
+                       width = width,
+                       x_ = x_,
+                       m = settings$m)
+
+    ans <- numeric(length(x.original))
+    miss <- length(ii) - length(sol$xbest)
+    ans[ii] <- c(sol$xbest, rep(NA, miss))
+
+    if (log.scale)
+        ans <- 10^ans
+    ans
+}

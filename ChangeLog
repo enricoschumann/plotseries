@@ -1,3 +1,8 @@
+2025-09-15  Enrico Schumann  <es@enricoschumann.net>
+
+        * R/plotseries.R (.spread_points): add function,
+        to replace .spread_labels
+
 2025-09-03  Enrico Schumann  <es@enricoschumann.net>
 
         * R/plotseries.R (.quantile): pass 'returns.show'
