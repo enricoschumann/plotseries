@@ -32,7 +32,8 @@ function(series, ..., bm = NULL, verbose = TRUE) {
 plotseries.default <-
 function(series,
          t,
-         col,
+         col = hcl.colors(n = NCOL(series),
+                          palette = "Dark Mint"),
          log.scale = FALSE,
          labels = NA,
          labels.show = TRUE,
@@ -43,7 +44,7 @@ function(series,
          labels.at.offset = NULL,
          labels.min.height = 0.05,
          labels.at.auto.settings = list(),
-         
+
          returns.show = TRUE,
          returns.period = "ann",
          returns.na.rm = FALSE,
@@ -145,6 +146,7 @@ function(series,
          shade.start = NULL,
          shade.end = NULL,
          shade.col = "grey",
+         xlim = NULL,
          ...
 
 
@@ -285,8 +287,9 @@ function(series,
             ylim <- range(series, na.rm = TRUE)
 
         if (!lines)
-            plot(t,
-                 rep(100, length(t)),
+            plot(x = t,
+                 y = rep(100, length(t)),
+                 xlim = xlim,
                  ylim = ylim,
                  xlab = "",
                  ylab = "",
@@ -866,7 +869,7 @@ function(x,
         settings[names(labels.at.auto.settings)] <-
                        labels.at.auto.settings
     }
-    
+
     x.original <- x
     ii <- order(x, decreasing = TRUE)
 

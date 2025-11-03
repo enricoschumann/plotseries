@@ -4,10 +4,10 @@ S3method("plotseries", "zoo")
 
 
 importFrom("stats",
-           "median", "quantile")
+           "median", "quantile", "runif")
 
 importFrom("grDevices",
-           "grey")
+           "grey", "hcl.colors")
 
 importFrom("graphics",
            "axis.POSIXct", "rect",
