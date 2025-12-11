@@ -436,7 +436,9 @@ function(series,
 
                 ## 'time.labels.at' NOT defined
                 if (numeric.t)
-                    xx <- axis(1, lwd = 0)
+                    xx <- axis(1, lwd = 0,
+                               at = time.labels.at,
+                               labels = time.labels)
                 else {
                     if (inherits(t, "POSIXt")) {
                         xx <- axis.POSIXct(1, lwd = 0, x = t)
@@ -613,7 +615,8 @@ function(series,
                 par(xpd = FALSE)
             }
 
-        } else if (series.type %in% c("quantile", "fan")) {
+        } else if (series.type %in% c("quantile", "fan") &&
+                   returns.show) {
             lab <- paste0(.fmt_r(quantile(R, probs = probs)), "%")
             y.temp <- na.locf(series)
             y <- quantile(coredata(tail(y.temp, 1)), probs = probs)
@@ -626,7 +629,6 @@ function(series,
                  col = median.col)
             par(xpd = FALSE)
         }
-
     }
 
     invisible(res)

@@ -1,6 +1,9 @@
 %% \VignetteIndexEntry{Example for plotseries}
 \documentclass[a4paper,11pt]{article}
-\usepackage[left = 3cm, top = 2cm, bottom = 2cm, right = 4cm]{geometry}
+\usepackage[left = 3cm,%
+            top  = 2cm,%
+            bottom = 2cm,%
+            right  = 4cm]{geometry}
 \usepackage[noae,nogin]{Sweave}
 \usepackage{libertine}
 \usepackage[scaled=0.9]{inconsolata}
@@ -46,7 +49,7 @@ if (!require("NMOF"))
     stop("package ", sQuote("NMOF"), " is required for this vignette")
 if (!require("bundesbank"))
     stop("package ", sQuote("NMOF"), " is required for this vignette")
-options(scipen=9999)
+options(scipen = 9999)
 @
 
 \section*{Time-series plots}
@@ -60,14 +63,15 @@ to fetch the most current data from Kenneth French's website.
 
 <<fig=TRUE, height=3, width=5.5>>=
 library("NMOF")
-series <- French("~/Downloads/French/",
-                 "F-F_Research_Data_Factors_daily_CSV.zip",
-                 frequency = "daily",
-                 price.series = TRUE)
-plotseries(series,
-           t = as.Date(row.names(series)),
-           col = hcl.colors(n = ncol(series), palette = "Dark 2"),
+ff <- French("~/Downloads/French/",
+             "F-F_Research_Data_Factors_daily_CSV.zip",
+             frequency = "daily",
+             price.series = TRUE)
+plotseries(ff,
+           t = as.Date(row.names(ff)),
            log.scale = TRUE,
+           labels.at = "auto",
+           labels.min.height = 0.05,
            labels = c("Market\n(excess return)", "SMB", "HML", "RF"),
            labels.col = TRUE)
 @
@@ -86,8 +90,7 @@ market <- French("~/Downloads/French/",
                  frequency = "daily",
                  price.series = TRUE)
 plotseries(market,
-           t = as.Date(row.names(series)),
-           col = hcl.colors(n = 12, palette = "Dark 2"),
+           t = as.Date(row.names(market)),
            log.scale = TRUE,
            dollars.show = TRUE,
            dollars.arrow = " -> ",
@@ -231,6 +234,40 @@ A quantile-plot plots only particular quantiles.
 <<quantile,fig = TRUE, height=2.5, width=6>>=
 plotseries(x, t, series.type = "quantile",
            probs = c(0.1, 0.25, 0.5, 0.75, 0.9))
+@
+
+
+
+\section*{Labels}
+
+There is (limited) support for avoiding overlapping
+labels, for case such as the following.
+
+<<labels1,fig = TRUE, height=2.5, width=6>>=
+x <- cbind(c(1, 1.03),
+           c(1, 1.0301),
+           c(1, 1.0302))
+t <- as.Date("2019-1-1") + seq_len(NROW(x))
+plotseries(scale1(x),
+           t, col = grey(c(.1,.4, .7)),
+           labels = c("A", "B", "C"),
+           labels.col = TRUE,
+           returns.show = TRUE,
+           log.scale = TRUE)
+@
+
+Argument \textsc{labels.min.height} defines what
+fraction of the plot's height is needed for a label.
+
+<<labels2,fig = TRUE, height=2.5, width=6>>=
+plotseries(scale1(x),
+           t, col = grey(c(.1,.4, .7)),
+           labels = c("A", "B", "C"),
+           labels.col = TRUE,
+           returns.show = TRUE,
+           labels.at = "auto",
+           log.scale = TRUE,
+           labels.min.height = 0.02)
 @
 
 %% \section*{BISdata}
