@@ -1,5 +1,5 @@
 ## -*- truncate-lines: t; -*-
-## Copyright (C) 2019-25  Enrico Schumann
+## Copyright (C) 2019-26  Enrico Schumann
 
 plotseries <- function(series, ...) {
     UseMethod("plotseries")
@@ -197,14 +197,25 @@ function(series,
         if (is.null(time.labels.at))
             time.labels.at <- t
         if (isTRUE(time.labels))
-            time.labels <- format(time.labels.at, "%m %Y")
+            time.labels <-
+                format(time.labels.at,
+                       if (is.null(time.labels.format))
+                           "%m %Y"
+                       else
+                           time.labels.format)
         numeric.t <- TRUE
     }
+
     if (inherits(t, "yearqtr")) {
         if (is.null(time.labels.at))
             time.labels.at <- t
         if (isTRUE(time.labels))
-            time.labels <- format(time.labels.at, "Q%q %Y")
+                        time.labels <-
+                format(time.labels.at,
+                       if (is.null(time.labels.format))
+                           "Q%q %Y"
+                       else
+                           time.labels.format)
         numeric.t <- TRUE
     }
 
@@ -458,11 +469,13 @@ function(series,
                 } else {
                     if (is.null(time.labels.format)) {
                         if (!is.null(time.labels)) {
-                            xx <- axis(1, at = time.labels.at,
+                            xx <- axis(1,
+                                       at = time.labels.at,
                                        labels = time.labels, lwd = 0,
                                        cex.axis = time.labels.cex)
                         } else
-                            xx <- axis.Date(1, lwd = 0, at = time.labels.at)
+                            xx <- axis.Date(1, lwd = 0, at = time.labels.at,
+                                            format = time.labels.format)
                     } else
                         xx <- axis.Date(1, lwd = 0,
                                         at = time.labels.at,

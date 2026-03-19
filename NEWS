@@ -1,4 +1,4 @@
-v0.4-0  (2025-09-03; not yet released)
+v0.4-0  (2026-03-19; not yet released)
 
   o support POSIXt timestamps
 
@@ -16,7 +16,7 @@ v0.3-0  (2024-05-25)
 
   o plotseries now invisibly returns a list with parameters
 
-  o quantile and fan plots now render (much) faster
+  o quantile and fan plots render (much) faster
 
   o new argument "reset.par"; if TRUE (the default), par
     settings are restored after plotting. (But FALSE is
