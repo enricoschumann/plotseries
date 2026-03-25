@@ -195,7 +195,7 @@ function(series,
     ## handle yearmon/yearqtr
     if (inherits(t, "yearmon")) {
         if (is.null(time.labels.at))
-            time.labels.at <- t
+            time.labels.at <- as.yearmon(pretty(as.Date(t, frac = 1)) - 1)
         if (isTRUE(time.labels))
             time.labels <-
                 format(time.labels.at,
@@ -208,7 +208,7 @@ function(series,
 
     if (inherits(t, "yearqtr")) {
         if (is.null(time.labels.at))
-            time.labels.at <- t
+            time.labels.at <- as.yearqtr(pretty(as.Date(t, frac = 1)) - 1)
         if (isTRUE(time.labels))
                         time.labels <-
                 format(time.labels.at,
@@ -450,6 +450,7 @@ function(series,
                     xx <- axis(1, lwd = 0,
                                at = time.labels.at,
                                labels = time.labels)
+
                 else {
                     if (inherits(t, "POSIXt")) {
                         xx <- axis.POSIXct(1, lwd = 0, x = t)
